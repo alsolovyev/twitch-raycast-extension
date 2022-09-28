@@ -1,0 +1,22 @@
+#!/bin/bash
+
+color_off="\033[0m"
+bold_red="\033[1;31m"
+bold_green="\033[1;32m"
+bold_yellow="\033[1;33m"
+bold_blue="\033[1;34m"
+
+commit_msg="$(cat $1)"
+commit_types="feat|fix|config|docs|style|refactor|test|chore|perf|other"
+
+msg_regex="^(${commit_types})(\((.*)\))?:"
+
+if [[ ! $commit_msg =~ $msg_regex ]]; then
+  printf "${bold_red}Your commit was rejected due to the commit message.\n\n${color_off}"
+
+  printf "${bold_blue}Please use the following format:\n"
+  printf "  feat: feature commit example\n"
+  printf "  fix(ui): fix commit example\n\n"
+  printf "Available commit types: $(echo $commit_types | sed "s/|/, /g" )\n${color_off}"
+  exit 1
+fi

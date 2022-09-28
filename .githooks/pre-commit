@@ -1,0 +1,17 @@
+#!/bin/bash
+
+color_off="\033[0m"
+bold_red="\033[1;31m"
+bold_green="\033[1;32m"
+bold_yellow="\033[1;33m"
+bold_blue="\033[1;34m"
+
+branch_name=$(git rev-parse --abbrev-ref HEAD)
+unavailable_names="master|main"
+branch_regex="^($unavailable_names)"
+
+if [[ $branch_name =~ $branch_regex ]]; then
+  printf "${bold_red}Your commit was rejected due to branching name.\n"
+  printf "Commits are not allowed on the $(echo $unavailable_names | sed "s/|/, /g" ) branches.${color_off}\n"
+  exit 1
+fi
