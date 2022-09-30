@@ -11,7 +11,7 @@ export default class ApiService implements IApiService {
   private readonly _options: RequestOptions = {}
 
   constructor(host: string, headers: OutgoingHttpHeaders = {}) {
-    this._options.host = host.replace(/^https?:\/\//, '')
+    this._options.host = host.replace(/^(?:https?:\/\/)?(?:www\.)?/i, '')
     this._options.headers = headers
   }
 

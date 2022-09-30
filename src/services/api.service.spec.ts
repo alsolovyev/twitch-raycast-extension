@@ -17,6 +17,15 @@ describe('Api Service module', () => {
     const secondApiService = new ApiService('http://' + url)
     expect(secondApiService['_options'].host).toBe(url)
 
+    const fourthApiService = new ApiService('https://www.' + url)
+    expect(fourthApiService['_options'].host).toBe(url)
+
+    const fifthApiService = new ApiService('www.' + url)
+    expect(fifthApiService['_options'].host).toBe(url)
+
+    const sixthApiService = new ApiService('http://www.' + url)
+    expect(sixthApiService['_options'].host).toBe(url)
+
     const thirdApiService = new ApiService(url)
     expect(thirdApiService['_options'].host).toBe(url)
   })
