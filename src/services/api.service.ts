@@ -16,7 +16,7 @@ export default class ApiService implements IApiService {
   }
 
   public set headers(headers: OutgoingHttpHeaders) {
-    this._options.headers = headers
+    this._options.headers = { ...this._options.headers, ...headers }
   }
 
   public get<T>(resourcePath: string): Promise<T> {
