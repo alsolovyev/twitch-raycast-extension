@@ -7,6 +7,12 @@ export interface IApiService {
   set headers(headers: OutgoingHttpHeaders)
 }
 
+export interface IApiServiceError {
+  code: string | number
+  error: string
+  message: string
+}
+
 export default class ApiService implements IApiService {
   private readonly _options: RequestOptions = {}
 
