@@ -1,6 +1,7 @@
 import ApiService from './api.service'
 import https from 'node:https'
 import nock from 'nock'
+import type { IApiServiceError } from './api.service'
 import type { OutgoingHttpHeaders } from 'node:http'
 
 
@@ -42,11 +43,11 @@ describe('Api Service module', () => {
 
     apiService.headers = newHeaders
     expect(apiService['_options'].headers).toStrictEqual(newHeaders)
-    expect(apiService['_options'].headers!['Content-Type']).toBe(newHeaders['Content-Type'])
+    expect(apiService['_options'].headers?.['Content-Type']).toBe(newHeaders['Content-Type'])
   })
 
   it('should send a GET request successfully', async () => {
-    const data: { [key: string]: any } = { key: 'value' }
+    const data: { [key: string]: string } = { key: 'value' }
 
     nock(defaultHost).get(defaultPath).reply(200, data)
 
@@ -58,20 +59,51 @@ describe('Api Service module', () => {
     expect(response).toStrictEqual(data)
   })
 
+  it('should catch server errors', async () => {
+    const apiService = new ApiService(defaultHost)
+    const error404: Partial<IApiServiceError> = { code: 404, error: 'Not Found' }
+    const error502: Partial<IApiServiceError> = { code: 502, error: 'Bad Gateway' }
+
+    nock(defaultHost).get(defaultPath).reply(404, error404)
+    await expect(apiService.get<unknown, typeof error404>(defaultPath)).rejects.toStrictEqual(error404)
+
+    nock(defaultHost).get(defaultPath).reply(502, error502)
+    await expect(apiService.get<unknown, typeof error502>(defaultPath)).rejects.toStrictEqual(error502)
+  })
+
   it('should catch system errors', async () => {
     const apiService = new ApiService(defaultHost)
-    const notFoundError: { [key: string]: any } = {
+    const responseError: { [key: string]: string | number } = {
       message: 'getaddrinfo ENOTFOUND https://example.com',
-      name: 'ENOTFOUND'
+      name: 'ENOTFOUND',
+      code: 404
+    }
+    const rejectedError: IApiServiceError = {
+      message: 'getaddrinfo ENOTFOUND https://example.com',
+      error: 'ENOTFOUND',
+      code: 404
     }
 
-    nock(defaultHost).get(defaultPath).replyWithError(notFoundError)
+    nock(defaultHost).get(defaultPath).replyWithError(responseError)
+    await expect(apiService.get<unknown>(defaultPath)).rejects.toStrictEqual(rejectedError)
+  })
 
-    try {
-      await apiService.get<unknown>(defaultPath)
-    } catch({error, message}) {
-      expect(error).toBe(notFoundError.name)
-      expect(message).toBe(notFoundError.message)
+  it('should throw an error if the response content-type is not json', async () => {
+    const contentTypeError: IApiServiceError = {
+      code: -1, error: 'SyntaxError', message: 'Unexpected end of JSON input'
     }
+    const apiService = new ApiService(defaultHost)
+    nock(defaultHost).get(defaultPath).reply(200, '')
+
+    await expect(apiService.get<unknown>(defaultPath)).rejects.toStrictEqual(contentTypeError)
+  })
+
+  it('should return true if a number is between two values (inclusive)', () => {
+    const apiService = new ApiService(defaultHost)
+
+    expect(apiService['_isNumberBetween'](200, 200, 300)).toBeTruthy()
+    expect(apiService['_isNumberBetween'](300, 200, 300)).toBeTruthy()
+    expect(apiService['_isNumberBetween'](-100, 200, 300)).toBeFalsy()
+    expect(apiService['_isNumberBetween'](400, 200, 300)).toBeFalsy()
   })
 })

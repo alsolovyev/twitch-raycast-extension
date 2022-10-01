@@ -13,6 +13,8 @@ export interface IApiServiceError {
   message: string
 }
 
+export const SUCCESSFUL_STATUS_CODES: [number, number] = [200, 299]
+
 export default class ApiService implements IApiService {
   private readonly _options: RequestOptions = {}
 
@@ -25,17 +27,34 @@ export default class ApiService implements IApiService {
     this._options.headers = { ...this._options.headers, ...headers }
   }
 
-  public get<T>(resourcePath: string): Promise<T> {
+  public get<T, B = IApiServiceError>(resourcePath: string): Promise<T> {
     return new Promise((resolve, reject) => {
       request({ method: 'GET', path: resourcePath, ...this._options }, (response: IncomingMessage) => {
         let buffer: string = ''
 
         response.addListener('data', bufferChunk => buffer += bufferChunk)
-        response.addListener('close', () => resolve(JSON.parse(buffer)))
-
-      }).addListener('error', ({ name, message }) => {
-        reject({ error: name, message })
-      }).end()
+        response.addListener('close', () => {
+          try {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const responseData: { [key: string]: any } = JSON.parse(buffer)
+            /** ToDo: handle errors by status codes (3**, 4**, etc) */
+            response.statusCode && this._isNumberBetween(response.statusCode, ...SUCCESSFUL_STATUS_CODES)
+              ? resolve(responseData as T)
+              : reject(responseData as B)
+          } catch (_) {
+            reject({ code: -1, error: 'SyntaxError', message: 'Unexpected end of JSON input' } as IApiServiceError)
+          }
+        })
+      })
+        .addListener('error', ({ code, message, name }: { [key: string]: string }) => {
+          /* ToDo: deal with the type of error */
+          reject({ code, error: name, message } as IApiServiceError)
+        })
+        .end()
     })
+  }
+
+  private _isNumberBetween(number: number, from: number, to: number): boolean {
+    return number >= from && number <= to ? true : false
   }
 }
