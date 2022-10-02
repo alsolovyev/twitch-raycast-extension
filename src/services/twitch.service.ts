@@ -41,9 +41,19 @@ export interface ITwitchOnlineStream {
   tag_ids: Array<string>
 }
 
+export interface ITwitchUserFollowsFromTo {
+  from_id: string
+  from_login: string
+  from_name: string
+  to_id: string
+  to_name: string
+  followed_at: string
+}
+
 export const enum TwitchResources {
   users = '/helix/users',
-  followed = '/helix/streams/followed'
+  followed = '/helix/streams/followed',
+  follows = '/helix/users/follows'
 }
 
 export default class TwitchService extends ApiService {
@@ -68,6 +78,22 @@ export default class TwitchService extends ApiService {
   public async getOnlineFollowedStreams(userId: string | number): Promise<Array<ITwitchOnlineStream>> {
     const { data } = await this.get<ITwitchResponse<ITwitchOnlineStream>, ITwitchError>(
       `${TwitchResources.followed}?user_id=${userId}`
+    )
+    return data
+  }
+
+  /**
+   * Gets information about users who are being followed by a user.
+   *
+   * @remarks
+   * Twitch API Reference Get Users Follows - {@link https://dev.twitch.tv/docs/api/reference#get-users-follows}
+   *
+   * @param userId - the user ID.
+   * @returns information about users who are being followed by the from_id user.
+   */
+  public async getUserFollows(userId: string | number): Promise<Array<ITwitchUserFollowsFromTo>> {
+    const { data } = await this.get<ITwitchResponse<ITwitchUserFollowsFromTo>, ITwitchError>(
+      `${TwitchResources.follows}?from_id=${userId}`
     )
     return data
   }
