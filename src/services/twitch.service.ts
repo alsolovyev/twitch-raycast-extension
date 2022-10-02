@@ -25,8 +25,25 @@ export interface ITwitchUser {
   created_at: string
 }
 
+export interface ITwitchOnlineStream {
+  id: string
+  user_id: string
+  user_login: string
+  user_name: string
+  game_id: string
+  game_name: string
+  type: 'live' | ''
+  title: string
+  viewer_count: number
+  started_at: string
+  language: string
+  thumbnail_url: string
+  tag_ids: Array<string>
+}
+
 export const enum TwitchResources {
-  users = '/helix/users'
+  users = '/helix/users',
+  followed = '/helix/streams/followed'
 }
 
 export default class TwitchService extends ApiService {
@@ -37,5 +54,21 @@ export default class TwitchService extends ApiService {
   public async getAuthUser(): Promise<ITwitchUser> {
     const { data } = await this.get<ITwitchResponse<ITwitchUser>, ITwitchError>(TwitchResources.users)
     return data[0]
+  }
+
+  /**
+   * Gets information about online streams belonging to channels that the authenticated user follows.
+   *
+   * @remarks
+   * Twitch API Reference Get Followed Streams - {@link https://dev.twitch.tv/docs/api/reference#get-followed-streams}
+   *
+   * @param userId - the User ID in the bearer token.
+   * @returns information about active streams.
+   */
+  public async getOnlineFollowedStreams(userId: string | number): Promise<Array<ITwitchOnlineStream>> {
+    const { data } = await this.get<ITwitchResponse<ITwitchOnlineStream>, ITwitchError>(
+      `${TwitchResources.followed}?user_id=${userId}`
+    )
+    return data
   }
 }
