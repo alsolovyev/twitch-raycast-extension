@@ -1,4 +1,4 @@
-import ApiService from './api.service'
+import ApiService, { API_SERVICE_PARSE_ERROR } from './api.service'
 import https from 'node:https'
 import nock from 'nock'
 import type { IApiServiceError } from './api.service'
@@ -89,13 +89,10 @@ describe('Api Service module', () => {
   })
 
   it('should throw an error if the response content-type is not json', async () => {
-    const contentTypeError: IApiServiceError = {
-      code: -1, error: 'SyntaxError', message: 'Unexpected end of JSON input'
-    }
     const apiService = new ApiService(defaultHost)
     nock(defaultHost).get(defaultPath).reply(200, '')
 
-    await expect(apiService.get<unknown>(defaultPath)).rejects.toStrictEqual(contentTypeError)
+    await expect(apiService.get<unknown>(defaultPath)).rejects.toStrictEqual(API_SERVICE_PARSE_ERROR)
   })
 
   it('should return true if a number is between two values (inclusive)', () => {

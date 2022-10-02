@@ -1,5 +1,5 @@
 import nock from 'nock'
-import TwitchService, { ITwitchError, ITwitchUser, TwitchResources } from './twitch.service'
+import { API_SERVICE_PARSE_ERROR } from './api.service'
 
 
 const twitchApiHost: string = 'https://api.twitch.tv'
@@ -18,6 +18,6 @@ describe('Twitch Service - getAuthUser', () => {
     await expect(twitchService.getAuthUser()).rejects.toStrictEqual(twitch401Error)
 
     nock(twitchApiHost).get(TwitchResources.users).reply(200, '')
-    await expect(twitchService.getAuthUser()).rejects.toStrictEqual({ code: -1, error: 'SyntaxError', message: 'Unexpected end of JSON input' })
+    await expect(twitchService.getAuthUser()).rejects.toStrictEqual(API_SERVICE_PARSE_ERROR)
   })
 })

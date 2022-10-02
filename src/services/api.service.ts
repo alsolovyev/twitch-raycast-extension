@@ -14,6 +14,11 @@ export interface IApiServiceError {
 }
 
 export const SUCCESSFUL_STATUS_CODES: [number, number] = [200, 299]
+export const API_SERVICE_PARSE_ERROR: IApiServiceError = {
+  code: -1,
+  error: 'SyntaxError',
+  message: 'Unable to parse response as JSON'
+}
 
 export default class ApiService implements IApiService {
   private readonly _options: RequestOptions = {}
@@ -42,7 +47,7 @@ export default class ApiService implements IApiService {
               ? resolve(responseData as T)
               : reject(responseData as B)
           } catch (_) {
-            reject({ code: -1, error: 'SyntaxError', message: 'Unexpected end of JSON input' } as IApiServiceError)
+            reject(API_SERVICE_PARSE_ERROR)
           }
         })
       })
