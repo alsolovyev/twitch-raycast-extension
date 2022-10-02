@@ -61,6 +61,14 @@ export default class TwitchService extends ApiService {
     super(host, headers)
   }
 
+  /**
+   * Gets information about a user authenticated with a Bearer token.
+   *
+   * @remarks
+   * Twitch API Reference Get Users - {@link https://dev.twitch.tv/docs/api/reference#get-users}
+   *
+   * @returns user information.
+   */
   public async getAuthUser(): Promise<ITwitchUser> {
     const { data } = await this.get<ITwitchResponse<ITwitchUser>, ITwitchError>(TwitchResources.users)
     return data[0]
