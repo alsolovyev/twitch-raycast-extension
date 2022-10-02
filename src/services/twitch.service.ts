@@ -56,6 +56,12 @@ export const enum TwitchResources {
   follows = '/helix/users/follows'
 }
 
+/**
+ * Service for working with Twitch.tv API
+ *
+ * @remarks
+ * Twitch API Docs- {@link https://dev.twitch.tv/docs}
+ */
 export default class TwitchService extends ApiService {
   constructor(host: string, headers: OutgoingHttpHeaders) {
     super(host, headers)
