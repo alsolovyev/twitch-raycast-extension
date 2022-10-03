@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import nock from 'nock'
 import { API_SERVICE_PARSE_ERROR } from './api.service'
 import TwitchService, {
