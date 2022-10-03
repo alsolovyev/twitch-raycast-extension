@@ -18,6 +18,24 @@
       "mode": "view"
     }
   ],
+  "preferences": [
+    {
+      "name": "clientId",
+      "type": "password",
+      "default": "",
+      "title": "Client ID",
+      "required": true,
+      "description": "Twitch Client ID - https://dev.twitch.tv/docs/api/get-started#register-an-application"
+    },
+    {
+      "name": "authToken",
+      "type": "password",
+      "default": "",
+      "title": "Authorization Token",
+      "required": true,
+      "description": "Twitch Bearer token (must be matching with Client ID) - https://dev.twitch.tv/docs/api/get-started#get-an-oauth-token"
+    }
+  ],
   "devDependencies": {
     "@babel/core": "^7.19.3",
     "@babel/preset-env": "^7.19.3",
