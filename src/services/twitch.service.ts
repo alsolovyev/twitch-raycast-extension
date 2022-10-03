@@ -2,6 +2,13 @@ import ApiService from './api.service'
 import type { OutgoingHttpHeaders } from 'node:http'
 
 
+export interface ITwitchService {
+  getAuthUser(): Promise<ITwitchUser>
+  getOnlineFollowedStreams(userId: string | number): Promise<Array<ITwitchOnlineStream>>
+  getUserFollows(userId: string | number): Promise<Array<ITwitchUserFollowsFromTo>>
+  getUsers(userIDsOrLogins: Array<string>): Promise<Array<ITwitchUserInfo>>
+}
+
 export interface ITwitchResponse<T> {
   data: Array<T>
 }
@@ -76,7 +83,7 @@ export const enum TwitchResources {
  * @remarks
  * Twitch API Docs- {@link https://dev.twitch.tv/docs}
  */
-export default class TwitchService extends ApiService {
+export default class TwitchService extends ApiService implements ITwitchService {
   constructor(host: string, headers: OutgoingHttpHeaders) {
     super(host, headers)
   }
