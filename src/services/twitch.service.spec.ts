@@ -72,3 +72,29 @@ describe('Twitch Service - getUserFollows', () => {
     await expect(twitchService.getUserFollows(twitchUser.id as string)).rejects.toStrictEqual(API_SERVICE_PARSE_ERROR)
   })
 })
+
+describe('Twitch Service - getUsers', () => {
+  it('should return a list of users', async () => {
+    nock(twitchApiHost)
+      .get(`${TwitchResources.users}?id=${twitchUser.id}&login=${twitchUser.login}`)
+      .reply(200, { data: [twitchUserFollowFromTo, twitchUserFollowFromTo] })
+    await expect(twitchService.getUsers([twitchUser.id!, twitchUser.login!])).resolves.toStrictEqual([
+      twitchUserFollowFromTo,
+      twitchUserFollowFromTo
+    ])
+  })
+
+  it('should return an empty list if an empty array is passed', async () => {
+    await expect(twitchService.getUsers([])).resolves.toStrictEqual([])
+  })
+
+  it('should return an error if the request fails', async () => {
+    nock(twitchApiHost).get(`${TwitchResources.users}?id=${twitchUser.id}&login=${twitchUser.login}`).reply(401, twitch401Error)
+    await expect(twitchService.getUsers([twitchUser.id!, twitchUser.login!])).rejects.toStrictEqual(twitch401Error)
+
+    nock(twitchApiHost).get(`${TwitchResources.users}?id=${twitchUser.id}&login=${twitchUser.login}`).reply(200, '')
+    await expect(twitchService.getUsers([twitchUser.id!, twitchUser.login!])).rejects.toStrictEqual(
+      API_SERVICE_PARSE_ERROR
+    )
+  })
+})

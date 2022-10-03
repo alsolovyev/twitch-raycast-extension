@@ -25,6 +25,20 @@ export interface ITwitchUser {
   created_at: string
 }
 
+export interface ITwitchUserInfo {
+  id: string
+  login: string
+  display_name: string
+  type: 'staff' | 'admin' | 'global_mod' | ''
+  broadcaster_type: 'partner' | 'affiliate' | ''
+  description: string
+  profile_image_url: string
+  offline_image_url: string
+  view_count: string
+  email: string
+  created_at: string
+}
+
 export interface ITwitchOnlineStream {
   id: string
   user_id: string
@@ -108,6 +122,28 @@ export default class TwitchService extends ApiService {
   public async getUserFollows(userId: string | number): Promise<Array<ITwitchUserFollowsFromTo>> {
     const { data } = await this.get<ITwitchResponse<ITwitchUserFollowsFromTo>, ITwitchError>(
       `${TwitchResources.follows}?from_id=${userId}`
+    )
+    return data
+  }
+
+  /**
+   * Gets information about one or more specified Twitch users.
+   *
+   * @remarks
+   * Twitch API Reference Get Users - {@link https://dev.twitch.tv/docs/api/reference#get-users}
+   *
+   * @param userIDsOrLogins - the list of user IDs or logins.
+   * @returns returns a list with information about Twitch users.
+   */
+  public async getUsers(userIDsOrLogins: Array<string>): Promise<Array<ITwitchUserInfo>> {
+    if (userIDsOrLogins.length === 0) return []
+
+    const queryParams: string = userIDsOrLogins
+      .reduce((prev: string, cur: string) => `${prev}${isNaN(Number(cur)) ? 'login=' : 'id='}${cur}&`, '')
+      .slice(0, -1)
+
+    const { data } = await this.get<ITwitchResponse<ITwitchUserInfo>, ITwitchError>(
+      `${TwitchResources.users}?${queryParams}`
     )
     return data
   }
