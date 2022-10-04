@@ -17,6 +17,14 @@ const twitch401Error: ITwitchError = { error: 'Unauthorized', status: 401, messa
 const twitchLiveStream: Partial<ITwitchLiveStream> = { id: twitchUser.id, user_name: twitchUser.login }
 const twitchUserFollowFromTo: Partial<ITwitchUserFollowsFromTo> = { from_id: twitchUser.id, to_id: twitchUser.id }
 
+describe('Twitch Service - singleton', () => {
+  it('should only create one instance of the service', () => {
+    const newTwitchService: TwitchService = new TwitchService('https://twitch.tv', {})
+
+    expect(newTwitchService).toMatchObject(twitchService)
+  })
+})
+
 describe('Twitch Service - getAuthUser', () => {
   it('should return information about the authorized (by Bearer token) user', async () => {
     nock(twitchApiHost).get(TwitchResources.users).reply(200, { data: [twitchUser] })

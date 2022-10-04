@@ -1,5 +1,6 @@
 import ApiService from './api.service'
 import type { OutgoingHttpHeaders } from 'node:http'
+import { Singleton } from '../decorators/singleton.decorator'
 
 
 export interface ITwitchService {
@@ -83,6 +84,7 @@ export const enum TwitchResources {
  * @remarks
  * Twitch API Docs- {@link https://dev.twitch.tv/docs}
  */
+@Singleton
 export default class TwitchService extends ApiService implements ITwitchService {
   constructor(host: string, headers: OutgoingHttpHeaders) {
     super(host, headers)
