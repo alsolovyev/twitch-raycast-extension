@@ -30,7 +30,7 @@ describe('Hook: useLiveFollowedStreams', () => {
     const getLiveFollowedStreamsMock = jest
       .spyOn(twitchService, 'getLiveFollowedStreams')
       .mockResolvedValue([fakeTwitchLiveStream])
-    const { result, waitForNextUpdate } = renderHook(() => useLiveFollowedStreams(twitchService))
+    const { result, waitForNextUpdate } = renderHook(() => useLiveFollowedStreams())
 
     expect(result.current).toStrictEqual([undefined, true, []])
 
@@ -46,7 +46,7 @@ describe('Hook: useLiveFollowedStreams', () => {
     const getLiveFollowedStreamsMock = jest
       .spyOn(twitchService, 'getLiveFollowedStreams')
       .mockRejectedValueOnce(fakeTwitchError)
-    const { result, waitForNextUpdate } = renderHook(() => useLiveFollowedStreams(twitchService))
+    const { result, waitForNextUpdate } = renderHook(() => useLiveFollowedStreams())
 
     expect(result.current).toStrictEqual([undefined, true, []])
 
