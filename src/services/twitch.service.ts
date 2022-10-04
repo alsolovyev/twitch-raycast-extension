@@ -24,13 +24,14 @@ export interface ITwitchUser {
   id: string
   login: string
   display_name: string
-  type: 'partner' | 'affiliate' | ''
-  broadcaster_type: 'staff' | 'admin' | 'global_mod' | ''
+  type: 'staff' | 'admin' | 'global_mod' | ''
+  broadcaster_type: 'partner' | 'affiliate' | ''
   description: string
   profile_image_url: string
   offline_image_url: string
   view_count: number
   created_at: string
+  email?: string
 }
 
 export interface ITwitchUserInfo {
@@ -61,6 +62,7 @@ export interface ITwitchLiveStream {
   language: string
   thumbnail_url: string
   tag_ids: Array<string>
+  is_mature: boolean
 }
 
 export interface ITwitchUserFollowsFromTo {
