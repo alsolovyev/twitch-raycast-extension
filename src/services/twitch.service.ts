@@ -4,7 +4,7 @@ import type { OutgoingHttpHeaders } from 'node:http'
 
 export interface ITwitchService {
   getAuthUser(): Promise<ITwitchUser>
-  getOnlineFollowedStreams(userId: string | number): Promise<Array<ITwitchOnlineStream>>
+  getLiveFollowedStreams(userId: string | number): Promise<Array<ITwitchLiveStream>>
   getUserFollows(userId: string | number): Promise<Array<ITwitchUserFollowsFromTo>>
   getUsers(userIDsOrLogins: Array<string>): Promise<Array<ITwitchUserInfo>>
 }
@@ -46,7 +46,7 @@ export interface ITwitchUserInfo {
   created_at: string
 }
 
-export interface ITwitchOnlineStream {
+export interface ITwitchLiveStream {
   id: string
   user_id: string
   user_login: string
@@ -102,16 +102,16 @@ export default class TwitchService extends ApiService implements ITwitchService 
   }
 
   /**
-   * Gets information about online streams belonging to channels that the authenticated user follows.
+   * Gets information about line streams belonging to channels that the authenticated user follows.
    *
    * @remarks
    * Twitch API Reference Get Followed Streams - {@link https://dev.twitch.tv/docs/api/reference#get-followed-streams}
    *
    * @param userId - the User ID in the bearer token.
-   * @returns information about active streams.
+   * @returns information about live streams.
    */
-  public async getOnlineFollowedStreams(userId: string | number): Promise<Array<ITwitchOnlineStream>> {
-    const { data } = await this.get<ITwitchResponse<ITwitchOnlineStream>, ITwitchError>(
+  public async getLiveFollowedStreams(userId: string | number): Promise<Array<ITwitchLiveStream>> {
+    const { data } = await this.get<ITwitchResponse<ITwitchLiveStream>, ITwitchError>(
       `${TwitchResources.followed}?user_id=${userId}`
     )
     return data
