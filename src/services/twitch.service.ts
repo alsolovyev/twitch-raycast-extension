@@ -1,6 +1,7 @@
 import ApiService from './api.service'
 import type { OutgoingHttpHeaders } from 'node:http'
 import { Singleton } from '../decorators/singleton.decorator'
+import { authToken, clientId } from '../core/preferences'
 
 
 export interface ITwitchService {
@@ -74,7 +75,9 @@ export interface ITwitchUserFollowsFromTo {
   followed_at: string
 }
 
+
 export const enum TwitchResources {
+  host = 'https://api.twitch.tv',
   users = '/helix/users',
   followed = '/helix/streams/followed',
   follows = '/helix/users/follows'
@@ -87,7 +90,7 @@ export const enum TwitchResources {
  * Twitch API Docs- {@link https://dev.twitch.tv/docs}
  */
 @Singleton
-export default class TwitchService extends ApiService implements ITwitchService {
+class TwitchService extends ApiService implements ITwitchService {
   constructor(host: string, headers: OutgoingHttpHeaders) {
     super(host, headers)
   }
@@ -159,3 +162,8 @@ export default class TwitchService extends ApiService implements ITwitchService 
     return data
   }
 }
+
+export default new TwitchService(TwitchResources.host, {
+  'Authorization': `Bearer ${ authToken }`,
+  'Client-Id': clientId
+})

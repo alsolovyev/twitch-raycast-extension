@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
-import TwitchService, { ITwitchError, ITwitchLiveStream, ITwitchUser } from '../services/twitch.service'
 import { IApiServiceError } from '../services/api.service'
+import { useEffect, useState } from 'react'
+import type { ITwitchError, ITwitchLiveStream, ITwitchService, ITwitchUser } from '../services/twitch.service'
 
 
 /**
@@ -10,7 +10,7 @@ import { IApiServiceError } from '../services/api.service'
  * @returns an array of three elements: error, isLoading and an array of live stream.
  */
 const useLiveFollowedStreams = (
-  twitchService: TwitchService
+  twitchService: ITwitchService
 ): [ITwitchError | IApiServiceError | undefined, boolean, Array<ITwitchLiveStream>] => {
   const [error, setError] = useState<ITwitchError | IApiServiceError>()
   const [isLoading, setIsLoading] = useState<boolean>(false)

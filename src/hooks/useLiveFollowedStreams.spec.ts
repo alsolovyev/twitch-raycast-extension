@@ -1,10 +1,24 @@
 import { renderHook } from '@testing-library/react-hooks'
-import { fakeTwitchError, fakeTwitchLiveStream, fakeTwitchUser } from '../constants/fake.constants'
-import TwitchService from '../services/twitch.service'
+import {
+  fakeTwitchAuthToken,
+  fakeTwitchClientId,
+  fakeTwitchError,
+  fakeTwitchLiveStream,
+  fakeTwitchUser
+} from '../constants/fake.constants'
+import twitchService from '../services/twitch.service'
 import useLiveFollowedStreams from './useLiveFollowedStreams'
 
 
-jest.mock('../services/twitch.service')
+jest.mock('../services/twitch.service', () => ({
+  getAuthUser: jest.fn(),
+  getLiveFollowedStreams: jest.fn()
+}))
+
+jest.mock('../core/preferences', () => ({
+  authorization: fakeTwitchAuthToken,
+  clientId: fakeTwitchClientId
+}))
 
 describe('Hook: useLiveFollowedStreams', () => {
   beforeEach(() => {
@@ -12,17 +26,11 @@ describe('Hook: useLiveFollowedStreams', () => {
   })
 
   it('should return a list of live streams', async () => {
-    const getAuthUserMock: jest.SpyInstance = jest
-      .spyOn(TwitchService.prototype, 'getAuthUser')
-      .mockImplementationOnce(() => Promise.resolve(fakeTwitchUser))
-
-    const getLiveFollowedStreamsMock: jest.SpyInstance = jest
-      .spyOn(TwitchService.prototype, 'getLiveFollowedStreams')
-      .mockImplementationOnce(() => Promise.resolve([fakeTwitchLiveStream]))
-
-    const { result, waitForNextUpdate } = renderHook(() =>
-      useLiveFollowedStreams(new TwitchService('https://api.fake.tv', {}))
-    )
+    const getAuthUserMock = jest.spyOn(twitchService, 'getAuthUser').mockResolvedValueOnce(fakeTwitchUser)
+    const getLiveFollowedStreamsMock = jest
+      .spyOn(twitchService, 'getLiveFollowedStreams')
+      .mockResolvedValue([fakeTwitchLiveStream])
+    const { result, waitForNextUpdate } = renderHook(() => useLiveFollowedStreams(twitchService))
 
     expect(result.current).toStrictEqual([undefined, true, []])
 
@@ -34,17 +42,11 @@ describe('Hook: useLiveFollowedStreams', () => {
   })
 
   it('should return an error', async () => {
-    const getAuthUserMock: jest.SpyInstance = jest
-      .spyOn(TwitchService.prototype, 'getAuthUser')
-      .mockImplementationOnce(() => Promise.resolve(fakeTwitchUser))
-
-    const getLiveFollowedStreamsMock: jest.SpyInstance = jest
-      .spyOn(TwitchService.prototype, 'getLiveFollowedStreams')
-      .mockImplementationOnce(() => Promise.reject(fakeTwitchError))
-
-    const { result, waitForNextUpdate } = renderHook(() =>
-      useLiveFollowedStreams(new TwitchService('https://api.fake.tv', {}))
-    )
+    const getAuthUserMock = jest.spyOn(twitchService, 'getAuthUser').mockResolvedValueOnce(fakeTwitchUser)
+    const getLiveFollowedStreamsMock = jest
+      .spyOn(twitchService, 'getLiveFollowedStreams')
+      .mockRejectedValueOnce(fakeTwitchError)
+    const { result, waitForNextUpdate } = renderHook(() => useLiveFollowedStreams(twitchService))
 
     expect(result.current).toStrictEqual([undefined, true, []])
 
