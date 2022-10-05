@@ -1,21 +1,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import nock from 'nock'
+import { fakeTwitchError, fakeTwitchLiveStream, fakeTwitchUser, fakeTwitchUserFollowsFromTo } from '../constants/fake.constants'
 import { API_SERVICE_PARSE_ERROR } from './api.service'
-import TwitchService, {
-  ITwitchError,
-  ITwitchUserFollowsFromTo,
-  ITwitchLiveStream,
-  ITwitchUser,
-  TwitchResources
-} from './twitch.service'
+import TwitchService, { TwitchResources } from './twitch.service'
 
 
 const twitchApiHost: string = 'https://api.twitch.tv'
 const twitchService: TwitchService = new TwitchService(twitchApiHost, {})
-const twitchUser: Partial<ITwitchUser> = { id: '12345', login: 'janeRivas' }
-const twitch401Error: ITwitchError = { error: 'Unauthorized', status: 401, message: 'OAuth token is missing' }
-const twitchLiveStream: Partial<ITwitchLiveStream> = { id: twitchUser.id, user_name: twitchUser.login }
-const twitchUserFollowFromTo: Partial<ITwitchUserFollowsFromTo> = { from_id: twitchUser.id, to_id: twitchUser.id }
 
 describe('Twitch Service - singleton', () => {
   it('should only create one instance of the service', () => {
@@ -27,13 +18,13 @@ describe('Twitch Service - singleton', () => {
 
 describe('Twitch Service - getAuthUser', () => {
   it('should return information about the authorized (by Bearer token) user', async () => {
-    nock(twitchApiHost).get(TwitchResources.users).reply(200, { data: [twitchUser] })
-    await expect(twitchService.getAuthUser()).resolves.toStrictEqual(twitchUser)
+    nock(twitchApiHost).get(TwitchResources.users).reply(200, { data: [fakeTwitchUser] })
+    await expect(twitchService.getAuthUser()).resolves.toStrictEqual(fakeTwitchUser)
   })
 
   it('should return an error if the request fails', async () => {
-    nock(twitchApiHost).get(TwitchResources.users).reply(401, twitch401Error)
-    await expect(twitchService.getAuthUser()).rejects.toStrictEqual(twitch401Error)
+    nock(twitchApiHost).get(TwitchResources.users).reply(401, fakeTwitchError)
+    await expect(twitchService.getAuthUser()).rejects.toStrictEqual(fakeTwitchError)
 
     nock(twitchApiHost).get(TwitchResources.users).reply(200, '')
     await expect(twitchService.getAuthUser()).rejects.toStrictEqual(API_SERVICE_PARSE_ERROR)
@@ -43,20 +34,20 @@ describe('Twitch Service - getAuthUser', () => {
 describe('Twitch Service - getLiveFollowedStreams', () => {
   it('should return a list of online streams', async () => {
     nock(twitchApiHost)
-      .get(`${TwitchResources.followed}?user_id=${twitchUser.id}`)
-      .reply(200, { data: [twitchLiveStream, twitchLiveStream] })
-    await expect(twitchService.getLiveFollowedStreams(twitchUser.id as string)).resolves.toStrictEqual([
-      twitchLiveStream,
-      twitchLiveStream
+      .get(`${TwitchResources.followed}?user_id=${fakeTwitchUser.id}`)
+      .reply(200, { data: [fakeTwitchLiveStream, fakeTwitchLiveStream] })
+    await expect(twitchService.getLiveFollowedStreams(fakeTwitchUser.id as string)).resolves.toStrictEqual([
+      fakeTwitchLiveStream,
+      fakeTwitchLiveStream
     ])
   })
 
   it('should return an error if the request fails', async () => {
-    nock(twitchApiHost).get(`${TwitchResources.followed}?user_id=${twitchUser.id}`).reply(401, twitch401Error)
-    await expect(twitchService.getLiveFollowedStreams(twitchUser.id as string)).rejects.toStrictEqual(twitch401Error)
+    nock(twitchApiHost).get(`${TwitchResources.followed}?user_id=${fakeTwitchUser.id}`).reply(401, fakeTwitchError)
+    await expect(twitchService.getLiveFollowedStreams(fakeTwitchUser.id as string)).rejects.toStrictEqual(fakeTwitchError)
 
-    nock(twitchApiHost).get(`${TwitchResources.followed}?user_id=${twitchUser.id}`).reply(200, '')
-    await expect(twitchService.getLiveFollowedStreams(twitchUser.id as string)).rejects.toStrictEqual(
+    nock(twitchApiHost).get(`${TwitchResources.followed}?user_id=${fakeTwitchUser.id}`).reply(200, '')
+    await expect(twitchService.getLiveFollowedStreams(fakeTwitchUser.id as string)).rejects.toStrictEqual(
       API_SERVICE_PARSE_ERROR
     )
   })
@@ -65,31 +56,31 @@ describe('Twitch Service - getLiveFollowedStreams', () => {
 describe('Twitch Service - getUserFollows', () => {
   it('should return a list of users', async () => {
     nock(twitchApiHost)
-      .get(`${TwitchResources.follows}?from_id=${twitchUser.id}`)
-      .reply(200, { data: [twitchUserFollowFromTo, twitchUserFollowFromTo] })
-    await expect(twitchService.getUserFollows(twitchUser.id as string)).resolves.toStrictEqual([
-      twitchUserFollowFromTo,
-      twitchUserFollowFromTo
+      .get(`${TwitchResources.follows}?from_id=${fakeTwitchUser.id}`)
+      .reply(200, { data: [fakeTwitchUserFollowsFromTo, fakeTwitchUserFollowsFromTo] })
+    await expect(twitchService.getUserFollows(fakeTwitchUser.id as string)).resolves.toStrictEqual([
+      fakeTwitchUserFollowsFromTo,
+      fakeTwitchUserFollowsFromTo
     ])
   })
 
   it('should return an error if the request fails', async () => {
-    nock(twitchApiHost).get(`${TwitchResources.follows}?from_id=${twitchUser.id}`).reply(401, twitch401Error)
-    await expect(twitchService.getUserFollows(twitchUser.id as string)).rejects.toStrictEqual(twitch401Error)
+    nock(twitchApiHost).get(`${TwitchResources.follows}?from_id=${fakeTwitchUser.id}`).reply(401, fakeTwitchError)
+    await expect(twitchService.getUserFollows(fakeTwitchUser.id as string)).rejects.toStrictEqual(fakeTwitchError)
 
-    nock(twitchApiHost).get(`${TwitchResources.follows}?from_id=${twitchUser.id}`).reply(200, '')
-    await expect(twitchService.getUserFollows(twitchUser.id as string)).rejects.toStrictEqual(API_SERVICE_PARSE_ERROR)
+    nock(twitchApiHost).get(`${TwitchResources.follows}?from_id=${fakeTwitchUser.id}`).reply(200, '')
+    await expect(twitchService.getUserFollows(fakeTwitchUser.id as string)).rejects.toStrictEqual(API_SERVICE_PARSE_ERROR)
   })
 })
 
 describe('Twitch Service - getUsers', () => {
   it('should return a list of users', async () => {
     nock(twitchApiHost)
-      .get(`${TwitchResources.users}?id=${twitchUser.id}&login=${twitchUser.login}`)
-      .reply(200, { data: [twitchUserFollowFromTo, twitchUserFollowFromTo] })
-    await expect(twitchService.getUsers([twitchUser.id!, twitchUser.login!])).resolves.toStrictEqual([
-      twitchUserFollowFromTo,
-      twitchUserFollowFromTo
+      .get(`${TwitchResources.users}?id=${fakeTwitchUser.id}&login=${fakeTwitchUser.login}`)
+      .reply(200, { data: [fakeTwitchUserFollowsFromTo, fakeTwitchUserFollowsFromTo] })
+    await expect(twitchService.getUsers([fakeTwitchUser.id!, fakeTwitchUser.login!])).resolves.toStrictEqual([
+      fakeTwitchUserFollowsFromTo,
+      fakeTwitchUserFollowsFromTo
     ])
   })
 
@@ -98,11 +89,11 @@ describe('Twitch Service - getUsers', () => {
   })
 
   it('should return an error if the request fails', async () => {
-    nock(twitchApiHost).get(`${TwitchResources.users}?id=${twitchUser.id}&login=${twitchUser.login}`).reply(401, twitch401Error)
-    await expect(twitchService.getUsers([twitchUser.id!, twitchUser.login!])).rejects.toStrictEqual(twitch401Error)
+    nock(twitchApiHost).get(`${TwitchResources.users}?id=${fakeTwitchUser.id}&login=${fakeTwitchUser.login}`).reply(401, fakeTwitchError)
+    await expect(twitchService.getUsers([fakeTwitchUser.id!, fakeTwitchUser.login!])).rejects.toStrictEqual(fakeTwitchError)
 
-    nock(twitchApiHost).get(`${TwitchResources.users}?id=${twitchUser.id}&login=${twitchUser.login}`).reply(200, '')
-    await expect(twitchService.getUsers([twitchUser.id!, twitchUser.login!])).rejects.toStrictEqual(
+    nock(twitchApiHost).get(`${TwitchResources.users}?id=${fakeTwitchUser.id}&login=${fakeTwitchUser.login}`).reply(200, '')
+    await expect(twitchService.getUsers([fakeTwitchUser.id!, fakeTwitchUser.login!])).rejects.toStrictEqual(
       API_SERVICE_PARSE_ERROR
     )
   })
