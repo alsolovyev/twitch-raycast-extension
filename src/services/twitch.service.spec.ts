@@ -18,11 +18,24 @@ jest.mock('../core/preferences', () => ({
 }))
 
 describe('Twitch Service - getAuthUser', () => {
+  beforeEach(() => {
+    twitchService['_authUser'] = undefined
+  })
+
   it('should return information about the authorized (by Bearer token) user', async () => {
-    nock(TwitchResources.host)
-      .get(TwitchResources.users)
-      .reply(200, { data: [fakeTwitchUser] })
+    nock(TwitchResources.host).get(TwitchResources.users).reply(200, { data: [fakeTwitchUser] })
     await expect(twitchService.getAuthUser()).resolves.toStrictEqual(fakeTwitchUser)
+  })
+
+  it('should return information about the authorized user from the cache', async () => {
+    const getSpy: jest.SpyInstance = jest.spyOn(twitchService, 'get')
+    nock(TwitchResources.host).get(TwitchResources.users).reply(200, { data: [fakeTwitchUser] })
+
+    await twitchService.getAuthUser()
+    expect(twitchService['_authUser']).toStrictEqual(fakeTwitchUser)
+
+    await twitchService.getAuthUser()
+    expect(getSpy).toBeCalledTimes(1)
   })
 
   it('should return an error if the request fails', async () => {

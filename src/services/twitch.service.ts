@@ -91,6 +91,9 @@ export const enum TwitchResources {
  */
 @Singleton
 class TwitchService extends ApiService implements ITwitchService {
+  /** A user authenticated with a Bearer token. */
+  private _authUser: ITwitchUser | undefined
+
   constructor(host: string, headers: OutgoingHttpHeaders) {
     super(host, headers)
   }
@@ -104,8 +107,12 @@ class TwitchService extends ApiService implements ITwitchService {
    * @returns user information.
    */
   public async getAuthUser(): Promise<ITwitchUser> {
+    if (this._authUser) return this._authUser
+
     const { data } = await this.get<ITwitchResponse<ITwitchUser>, ITwitchError>(TwitchResources.users)
-    return data[0]
+    this._authUser = data[0]
+
+    return this._authUser
   }
 
   /**
