@@ -5,6 +5,7 @@ import {
   fakeTwitchClientId,
   fakeTwitchError,
   fakeTwitchLiveStream,
+  fakeTwitchLiveSearchedChannel,
   fakeTwitchUser,
   fakeTwitchUserFollowsFromTo
 } from '../constants/fake.constants'
@@ -121,6 +122,43 @@ describe('Twitch Service - getUsers', () => {
       .reply(200, '')
     await expect(twitchService.getUsers([fakeTwitchUser.id!, fakeTwitchUser.login!])).rejects.toStrictEqual(
       API_SERVICE_PARSE_ERROR
+    )
+  })
+})
+
+describe('Twitch Service - searchChannels', () => {
+  it('should return a list of channels', async () => {
+    nock(TwitchResources.host)
+      .get(`${TwitchResources.searchChannels}?query=${fakeTwitchLiveSearchedChannel.broadcaster_login}`)
+      .reply(200, { data: [fakeTwitchLiveSearchedChannel] })
+
+    await expect(twitchService.searchChannels(fakeTwitchLiveSearchedChannel.broadcaster_login)).resolves.toStrictEqual([
+      fakeTwitchLiveSearchedChannel
+    ])
+  })
+
+  it('should not send a request if an empty string is passed', async () => {
+    jest.clearAllMocks()
+
+    const getSpy: jest.SpyInstance = jest.spyOn(twitchService, 'get')
+
+    nock(TwitchResources.host)
+      .get(`${TwitchResources.searchChannels}?query=${fakeTwitchLiveSearchedChannel.broadcaster_login}`)
+      .reply(200, { data: [fakeTwitchLiveSearchedChannel] })
+
+    await twitchService.searchChannels(fakeTwitchLiveSearchedChannel.broadcaster_login)
+    await twitchService.searchChannels('')
+
+    expect(getSpy).toBeCalledTimes(1)
+  })
+
+  it('should correctly throw an error', async () => {
+    nock(TwitchResources.host)
+      .get(`${TwitchResources.searchChannels}?query=${fakeTwitchLiveSearchedChannel.broadcaster_login}`)
+      .reply(401, fakeTwitchError)
+
+    await expect(twitchService.searchChannels(fakeTwitchLiveSearchedChannel.broadcaster_login)).rejects.toStrictEqual(
+      fakeTwitchError
     )
   })
 })

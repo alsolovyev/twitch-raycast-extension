@@ -9,6 +9,7 @@ export interface ITwitchService {
   getLiveFollowedStreams(userId: string | number): Promise<Array<ITwitchLiveStream>>
   getUserFollows(userId: string | number): Promise<Array<ITwitchUserFollowsFromTo>>
   getUsers(userIDsOrLogins: Array<string>): Promise<Array<ITwitchUser>>
+  searchChannels(query: string): Promise<Array<ITwitchSearchedChannel>>
 }
 
 export interface ITwitchResponse<T> {
@@ -61,12 +62,26 @@ export interface ITwitchUserFollowsFromTo {
   followed_at: string
 }
 
+export interface ITwitchSearchedChannel {
+  broadcaster_language: string
+  broadcaster_login: string
+  display_name: string
+  game_id: string
+  game_name: string
+  id: string
+  is_live: boolean
+  started_at: string
+  tags_ids: Array<string>
+  thumbnail_url: string
+  title: string
+}
 
 export const enum TwitchResources {
   host = 'https://api.twitch.tv',
   users = '/helix/users',
   followed = '/helix/streams/followed',
-  follows = '/helix/users/follows'
+  follows = '/helix/users/follows',
+  searchChannels = '/helix/search/channels'
 }
 
 /**
@@ -152,6 +167,26 @@ class TwitchService extends ApiService implements ITwitchService {
     const { data } = await this.get<ITwitchResponse<ITwitchUser>, ITwitchError>(
       `${TwitchResources.users}?${queryParams}`
     )
+    return data
+  }
+
+  /**
+   * Searches for channels (users who have streamed within the past 6 months)
+   * that match a query via channel name or description either entirely or partially.
+   *
+   * @remarks
+   * Twitch API Reference Search Channels - {@link https://dev.twitch.tv/docs/api/reference#search-channels}
+   *
+   * @param query - The search query.
+   * @returns a list of channels (users who have streamed within the past 6 months).
+   */
+  public async searchChannels(query: string): Promise<Array<ITwitchSearchedChannel>> {
+    if (query === '') return []
+
+    const { data } = await this.get<ITwitchResponse<ITwitchSearchedChannel>>(
+      `${TwitchResources.searchChannels}?query=${encodeURI(query)}`
+    )
+
     return data
   }
 }
