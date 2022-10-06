@@ -2,9 +2,9 @@
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "twitch",
   "title": "Twitch",
-  "description": "",
+  "description": "A Raycast extension for displaying information from Twitch.tv",
   "icon": "command-icon.png",
-  "author": "janeRivas",
+  "author": "Aleksey Solovyev",
   "categories": [
     "Fun",
     "Media"
