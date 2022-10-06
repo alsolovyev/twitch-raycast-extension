@@ -12,9 +12,9 @@
   "license": "MIT",
   "commands": [
     {
-      "name": "following",
-      "title": "Following",
-      "description": "",
+      "name": "followedChannels",
+      "title": "Show Followed Channels",
+      "description": "Shows information about followed channels",
       "mode": "view"
     }
   ],
