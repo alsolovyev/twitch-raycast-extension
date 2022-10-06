@@ -8,7 +8,7 @@ export interface ITwitchService {
   getAuthUser(): Promise<ITwitchUser>
   getLiveFollowedStreams(userId: string | number): Promise<Array<ITwitchLiveStream>>
   getUserFollows(userId: string | number): Promise<Array<ITwitchUserFollowsFromTo>>
-  getUsers(userIDsOrLogins: Array<string>): Promise<Array<ITwitchUserInfo>>
+  getUsers(userIDsOrLogins: Array<string>): Promise<Array<ITwitchUser>>
 }
 
 export interface ITwitchResponse<T> {
@@ -33,20 +33,6 @@ export interface ITwitchUser {
   view_count: number
   created_at: string
   email?: string
-}
-
-export interface ITwitchUserInfo {
-  id: string
-  login: string
-  display_name: string
-  type: 'staff' | 'admin' | 'global_mod' | ''
-  broadcaster_type: 'partner' | 'affiliate' | ''
-  description: string
-  profile_image_url: string
-  offline_image_url: string
-  view_count: string
-  email: string
-  created_at: string
 }
 
 export interface ITwitchLiveStream {
@@ -156,14 +142,14 @@ class TwitchService extends ApiService implements ITwitchService {
    * @param userIDsOrLogins - the list of user IDs or logins.
    * @returns returns a list with information about Twitch users.
    */
-  public async getUsers(userIDsOrLogins: Array<string>): Promise<Array<ITwitchUserInfo>> {
+  public async getUsers(userIDsOrLogins: Array<string>): Promise<Array<ITwitchUser>> {
     if (userIDsOrLogins.length === 0) return []
 
     const queryParams: string = userIDsOrLogins
       .reduce((prev: string, cur: string) => `${prev}${isNaN(Number(cur)) ? 'login=' : 'id='}${cur}&`, '')
       .slice(0, -1)
 
-    const { data } = await this.get<ITwitchResponse<ITwitchUserInfo>, ITwitchError>(
+    const { data } = await this.get<ITwitchResponse<ITwitchUser>, ITwitchError>(
       `${TwitchResources.users}?${queryParams}`
     )
     return data
