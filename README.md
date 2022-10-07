@@ -1,7 +1,7 @@
 <div align="center">
   <img src="./assets/extension-icon.png?raw=true" width="50" alt="Twitch Raycast Extension"/>
   <h1>Twitch Raycast Extension</h1>
-  <p>Raycast extension to view information about Twitch users you follow.</p>
+  <p>Raycast extension to search and view information about Twitch users.</p>
 
   <p>
     <a href="https://github.com/raycast/extensions/blob/master/LICENSE">
@@ -19,6 +19,7 @@
 ### Features
 
 - display followed channels
+- search channels
 
 <br />
 
