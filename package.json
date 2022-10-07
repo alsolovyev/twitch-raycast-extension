@@ -16,6 +16,12 @@
       "title": "Show Followed Channels",
       "description": "Shows information about followed channels",
       "mode": "view"
+    },
+    {
+      "name": "searchChannels",
+      "title": "Search Channels",
+      "description": "Search Twitch channels by name or description",
+      "mode": "view"
     }
   ],
   "preferences": [
