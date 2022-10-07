@@ -1,4 +1,10 @@
-import { ITwitchError, ITwitchLiveStream, ITwitchUser, ITwitchUserFollowsFromTo } from '../services/twitch.service'
+import {
+  ITwitchError,
+  ITwitchLiveStream,
+  ITwitchSearchedChannel,
+  ITwitchUser,
+  ITwitchUserFollowsFromTo
+} from '../services/twitch.service'
 
 export const fakeTwitchAuthToken: string = 't6v8z82dmym8zz69tej4atolibdcr7'
 export const fakeTwitchClientId: string = 'qou2ulob7b2y1w6zc6qhahdj75653x'
@@ -37,12 +43,41 @@ export const fakeTwitchLiveStream: ITwitchLiveStream = {
 }
 
 export const fakeTwitchUserFollowsFromTo: ITwitchUserFollowsFromTo = {
-  from_id: "171003792",
-  from_login: "iiisutha067iii",
-  from_name: "IIIsutha067III",
-  to_id: "23161357",
-  to_name: "LIRIK",
-  followed_at: "2017-08-22T22:55:24Z"
+  from_id: '171003792',
+  from_login: 'iiisutha067iii',
+  from_name: 'IIIsutha067III',
+  to_id: '23161357',
+  to_name: 'LIRIK',
+  followed_at: '2017-08-22T22:55:24Z'
+}
+
+export const fakeTwitchLiveSearchedChannel: ITwitchSearchedChannel = {
+  broadcaster_language: 'en',
+  broadcaster_login: 'loserfruit',
+  display_name: 'Loserfruit',
+  game_id: '498000',
+  game_name: 'House Flipper',
+  id: '41245072',
+  is_live: true,
+  tags_ids: [],
+  thumbnail_url:
+    'https://static-cdn.jtvnw.net/jtv_user_pictures/fd17325a-7dc2-46c6-8617-e90ec259501c-profile_image-300x300.png',
+  title: 'loserfruit',
+  started_at: ''
+}
+
+export const fakeTwitchOfflineSearchedChannel: ITwitchSearchedChannel = {
+  broadcaster_language: 'en',
+  broadcaster_login: 'a_seagull',
+  display_name: 'A_Seagull',
+  game_id: '506442',
+  game_name: 'DOOM Eternal',
+  id: '19070311',
+  is_live: false,
+  tags_ids: ['6ea6bca4-4712-4ab9-a906-e3336a9d8039'],
+  thumbnail_url: 'https://static-cdn.jtvnw.net/jtv_user_pictures/a_seagull-profile_image-4d2d235688c7dc66-300x300.png',
+  title: 'a_seagull',
+  started_at: '2020-03-18T17:56:00Z'
 }
 
 export const fakeTwitchError: ITwitchError = {
