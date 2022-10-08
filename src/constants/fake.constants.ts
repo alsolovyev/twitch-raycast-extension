@@ -3,7 +3,8 @@ import {
   ITwitchLiveStream,
   ITwitchSearchedChannel,
   ITwitchUser,
-  ITwitchUserFollowsFromTo
+  ITwitchUserFollowsFromTo,
+  ITwitchVideo
 } from '../services/twitch.service'
 
 export const fakeTwitchAuthToken: string = 't6v8z82dmym8zz69tej4atolibdcr7'
@@ -78,6 +79,28 @@ export const fakeTwitchOfflineSearchedChannel: ITwitchSearchedChannel = {
   thumbnail_url: 'https://static-cdn.jtvnw.net/jtv_user_pictures/a_seagull-profile_image-4d2d235688c7dc66-300x300.png',
   title: 'a_seagull',
   started_at: '2020-03-18T17:56:00Z'
+}
+
+export const fakeTwitchVideo: ITwitchVideo = {
+  created_at: '2018-11-14T21:30:18Z',
+  description:
+    'Welcome to Twitch development! Here is a quick overview of our products and information to help you get started.',
+  duration: '3m21s',
+  id: '335921245',
+  language: 'en',
+  muted_segments: [{ duration: 30, offset: 120 }],
+  published_at: '2018-11-14T22:04:30Z',
+  stream_id: null,
+  thumbnail_url:
+    'https://static-cdn.jtvnw.net/cf_vods/d2nvs31859zcd8/twitchdev/335921245/ce0f3a7f-57a3-4152-bc06-0c6610189fb3/thumb/index-0000000000-%{width}x%{height}.jpg',
+  title: 'Twitch Developers 101',
+  type: 'upload',
+  url: 'https://www.twitch.tv/videos/335921245',
+  user_id: '141981764',
+  user_login: 'twitchdev',
+  user_name: 'TwitchDev',
+  view_count: 1863062,
+  viewable: 'public'
 }
 
 export const fakeTwitchError: ITwitchError = {

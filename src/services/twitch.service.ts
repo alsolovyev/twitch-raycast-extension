@@ -9,6 +9,7 @@ export interface ITwitchService {
   getLiveFollowedStreams(userId: string | number): Promise<Array<ITwitchLiveStream>>
   getUserFollows(userId: string | number): Promise<Array<ITwitchUserFollowsFromTo>>
   getUsers(userIDsOrLogins: Array<string>): Promise<Array<ITwitchUser>>
+  getUserVideos(userId: string): Promise<Array<ITwitchVideo>>
   searchChannels(query: string): Promise<Array<ITwitchSearchedChannel>>
 }
 
@@ -76,12 +77,40 @@ export interface ITwitchSearchedChannel {
   title: string
 }
 
+export interface ITwitchVideo {
+  created_at: string
+  description: string
+  duration: string
+  id: string
+  language: string
+  muted_segments: Array<{ duration: number, offset: number }>
+  published_at: string
+  stream_id: string | null
+  thumbnail_url: string
+  title: string
+  type: string
+  url: string
+  user_id: string
+  user_login: string
+  user_name: string
+  view_count: number
+  viewable: string
+}
+
 export const enum TwitchResources {
   host = 'https://api.twitch.tv',
   users = '/helix/users',
   followed = '/helix/streams/followed',
   follows = '/helix/users/follows',
-  searchChannels = '/helix/search/channels'
+  searchChannels = '/helix/search/channels',
+  videos = '/helix/videos'
+}
+
+export enum TwitchVideoType {
+  all = 'all',
+  archive = 'archive',
+  highlight = 'highlight',
+  upload = 'upload'
 }
 
 /**
@@ -167,6 +196,25 @@ class TwitchService extends ApiService implements ITwitchService {
     const { data } = await this.get<ITwitchResponse<ITwitchUser>, ITwitchError>(
       `${TwitchResources.users}?${queryParams}`
     )
+    return data
+  }
+
+  /**
+   * Gets video information by user ID.
+   *
+   * @remarks
+   * Twitch API Reference Get Videos - {@link https://dev.twitch.tv/docs/api/reference#get-videos}
+   *
+   * @param userId - The user ID.
+   * @returns a list of user videos.
+   */
+  public async getUserVideos(userId: string, type: TwitchVideoType = TwitchVideoType.all): Promise<Array<ITwitchVideo>> {
+    if (!userId) return []
+
+    const { data } = await this.get<ITwitchResponse<ITwitchVideo>>(
+      `${TwitchResources.videos}?user_id=${encodeURI(userId)}&type=${type}`
+    )
+
     return data
   }
 

@@ -7,10 +7,11 @@ import {
   fakeTwitchLiveStream,
   fakeTwitchLiveSearchedChannel,
   fakeTwitchUser,
-  fakeTwitchUserFollowsFromTo
+  fakeTwitchUserFollowsFromTo,
+  fakeTwitchVideo
 } from '../constants/fake.constants'
 import { API_SERVICE_PARSE_ERROR } from './api.service'
-import twitchService, { TwitchResources } from './twitch.service'
+import twitchService, { TwitchResources, TwitchVideoType } from './twitch.service'
 
 
 jest.mock('../core/preferences', () => ({
@@ -19,6 +20,10 @@ jest.mock('../core/preferences', () => ({
 }))
 
 describe('Twitch Service', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
   describe('getAuthUser', () => {
     beforeEach(() => {
       twitchService['_authUser'] = undefined
@@ -124,6 +129,32 @@ describe('Twitch Service', () => {
       await expect(twitchService.getUsers([fakeTwitchUser.id!, fakeTwitchUser.login!])).rejects.toStrictEqual(
         API_SERVICE_PARSE_ERROR
       )
+    })
+  })
+
+  describe('getUserVideos', () => {
+    it('should return a list of videos', async () => {
+      nock(TwitchResources.host)
+        .get(`${TwitchResources.videos}?user_id=${fakeTwitchVideo.user_id}&type=${TwitchVideoType.all}`)
+        .reply(200, { data: [fakeTwitchVideo, fakeTwitchVideo] })
+
+      await expect(twitchService.getUserVideos(fakeTwitchVideo.user_id)).resolves.toStrictEqual([fakeTwitchVideo, fakeTwitchVideo])
+    })
+
+    it('should return an empty list if an empty user id is passed', async () => {
+      const getSpy: jest.SpyInstance = jest.spyOn(twitchService, 'get')
+
+      await expect(twitchService.getUserVideos('')).resolves.toStrictEqual([])
+
+      expect(getSpy).not.toBeCalled()
+    })
+
+    it('should correctly throw an error', async () => {
+      nock(TwitchResources.host)
+        .get(`${TwitchResources.videos}?user_id=${fakeTwitchVideo.user_id}&type=${TwitchVideoType.all}`)
+        .reply(401, fakeTwitchError)
+
+      await expect(twitchService.getUserVideos(fakeTwitchVideo.user_id)).rejects.toStrictEqual(fakeTwitchError)
     })
   })
 

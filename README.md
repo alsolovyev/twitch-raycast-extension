@@ -20,6 +20,7 @@
 
 - display followed channels
 - search channels
+- view channel videos
 
 <br />
 
