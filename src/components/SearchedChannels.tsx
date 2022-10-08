@@ -1,5 +1,6 @@
 import { Action, ActionPanel, Color, Icon, List } from '@raycast/api'
 import { ITwitchSearchedChannel } from '../services/twitch.service'
+import Videos from '../views/Videos'
 
 
 export interface ISearchedChannels {
@@ -36,11 +37,17 @@ export default ({ channels, subtitle, title }: ISearchedChannels): JSX.Element =
               title='Open Channel in Browser'
               url={`https://twitch.tv/${broadcaster_login}`}
             />
-            {is_live && (
+            {is_live ? (
               <Action.OpenInBrowser
                 icon={{ source: Icon.SpeechBubble, tintColor: Color.Purple }}
                 title='Open Chat in Browser'
                 url={`https://twitch.tv/popout/${broadcaster_login}/chat?popout=`}
+              />
+            ) : (
+              <Action.Push
+                icon={{ source: Icon.Video, tintColor: Color.Purple }}
+                title='Open Channel Videos'
+                target={<Videos user={{ id, name: display_name }} />}
               />
             )}
           </ActionPanel>

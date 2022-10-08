@@ -1,5 +1,6 @@
-import { Action, ActionPanel, Icon, List } from '@raycast/api'
+import { Action, ActionPanel, Color, Icon, List } from '@raycast/api'
 import { ITwitchUser } from '../services/twitch.service'
+import Videos from '../views/Videos'
 
 
 export interface IOfflineStreams {
@@ -29,6 +30,11 @@ export default ({ streams }: IOfflineStreams) => (
               icon={{ source: Icon.Livestream, tintColor: Color.Purple }}
               title='Open Channel in Browser'
               url={`https://twitch.tv/${login}`}
+            />
+            <Action.Push
+              icon={{ source: Icon.Video, tintColor: Color.Purple }}
+              title='Open Channel Videos'
+              target={<Videos user={{ id, name: display_name }} />}
             />
           </ActionPanel>
         }
