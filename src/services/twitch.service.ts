@@ -106,11 +106,11 @@ export const enum TwitchResources {
   videos = '/helix/videos'
 }
 
-export const enum TwitchVideoType {
+export enum TwitchVideoType {
   all = 'all',
-  upload = 'upload',
   archive = 'archive',
-  highlight = 'highlight'
+  highlight = 'highlight',
+  upload = 'upload'
 }
 
 /**
