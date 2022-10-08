@@ -8,7 +8,8 @@ import {
   fakeTwitchLiveSearchedChannel,
   fakeTwitchUser,
   fakeTwitchUserFollowsFromTo,
-  fakeTwitchVideo
+  fakeTwitchVideo,
+  fakeTwitchClip
 } from '../constants/fake.constants'
 import { API_SERVICE_PARSE_ERROR } from './api.service'
 import twitchService, { TwitchResources, TwitchVideoType } from './twitch.service'
@@ -51,6 +52,46 @@ describe('Twitch Service', () => {
 
       nock(TwitchResources.host).get(TwitchResources.users).reply(200, '')
       await expect(twitchService.getAuthUser()).rejects.toStrictEqual(API_SERVICE_PARSE_ERROR)
+    })
+  })
+
+  describe('getClips', () => {
+    it('should return a list of clips', async () => {
+      nock(TwitchResources.host)
+        .get(`${TwitchResources.clips}?broadcaster_id=${fakeTwitchClip.broadcaster_id}`)
+        .reply(200, { data: [fakeTwitchClip, fakeTwitchClip] })
+
+      await expect(twitchService.getClips(fakeTwitchClip.broadcaster_id)).resolves.toStrictEqual([
+        fakeTwitchClip,
+        fakeTwitchClip
+      ])
+    })
+
+    it('should return an empty list without calling request if an empty bordcaster id is passed', async () => {
+      const getSpy: jest.SpyInstance = jest.spyOn(twitchService, 'get')
+
+      await expect(twitchService.getClips('')).resolves.toStrictEqual([])
+      expect(getSpy).not.toBeCalled()
+    })
+
+    it('should throw an error', async () => {
+      nock(TwitchResources.host)
+        .get(`${TwitchResources.clips}?broadcaster_id=${fakeTwitchClip.broadcaster_id}`)
+        .reply(401, fakeTwitchError)
+
+      await expect(twitchService.getClips(fakeTwitchClip.broadcaster_id)).rejects.toStrictEqual(fakeTwitchError)
+    })
+
+    it('should currectlu parse qyery params', async () => {
+      const getSpy: jest.SpyInstance = jest.spyOn(twitchService, 'get')
+
+      nock(TwitchResources.host)
+        .get(`${TwitchResources.clips}?broadcaster_id=${fakeTwitchVideo.user_id}&first=100`)
+        .reply(200, { data: [fakeTwitchVideo, fakeTwitchVideo] })
+
+      await twitchService.getClips(fakeTwitchVideo.user_id, { first: 100 })
+
+      expect(getSpy).toBeCalledWith(`${TwitchResources.clips}?broadcaster_id=${fakeTwitchVideo.user_id}&first=100`)
     })
   })
 

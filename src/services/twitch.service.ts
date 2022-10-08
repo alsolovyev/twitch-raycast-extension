@@ -7,6 +7,7 @@ import { authToken, clientId } from '../core/preferences'
 
 export interface ITwitchService {
   getAuthUser(): Promise<ITwitchUser>
+  getClips(broadcasterId: string): Promise<Array<ITwitchClip>>
   getLiveFollowedStreams(userId: string | number): Promise<Array<ITwitchLiveStream>>
   getUserFollows(userId: string | number): Promise<Array<ITwitchUserFollowsFromTo>>
   getUsers(userIDsOrLogins: Array<string>): Promise<Array<ITwitchUser>>
@@ -98,12 +99,32 @@ export interface ITwitchVideo {
   viewable: string
 }
 
+export interface ITwitchClip {
+  broadcaster_id: string
+  broadcaster_name: string
+  created_at: string
+  creator_id: string
+  creator_name: string
+  duration: number
+  embed_url: string
+  game_id: string
+  id: string
+  language: string
+  thumbnail_url: string
+  title: string
+  url: string
+  video_id: string
+  view_count: number
+  vod_offset: number
+}
+
 export const enum TwitchResources {
   host = 'https://api.twitch.tv',
-  users = '/helix/users',
+  clips = '/helix/clips',
   followed = '/helix/streams/followed',
   follows = '/helix/users/follows',
   searchChannels = '/helix/search/channels',
+  users = '/helix/users',
   videos = '/helix/videos'
 }
 
@@ -115,6 +136,14 @@ export interface ITwtichVideoQueryParams extends querystring.ParsedUrlQueryInput
   period?: string
   sort?: 'time' | 'trending' | 'views'
   type?: TwitchVideoType
+}
+
+export interface ITwtichGetClipsQueryParams extends querystring.ParsedUrlQueryInput {
+  after?: string
+  before?: string
+  ended_at?: string
+  first?: number
+  started_at?: string
 }
 
 export enum TwitchVideoType {
@@ -154,6 +183,28 @@ class TwitchService extends ApiService implements ITwitchService {
     this._authUser = data[0]
 
     return this._authUser
+  }
+
+  /**
+   * Gets clip information by broadcaster ID.
+   *
+   * @remarks
+   * Twitch API Reference Get Clips - {@link https://dev.twitch.tv/docs/api/reference#get-clips}
+   *
+   * @param broadcasterId - The ID of a broadcaster whose clips are being requested.
+   * @param queryParams - Optional query params {@link ITwtichGetClipsQueryParams}.
+   * @returns a list of clips.
+   */
+  public async getClips(broadcasterId: string, queryParams?: ITwtichGetClipsQueryParams): Promise<Array<ITwitchClip>> {
+    if (!broadcasterId) return []
+
+    const { data } = await this.get<ITwitchResponse<ITwitchClip>>(
+      `${TwitchResources.clips}?broadcaster_id=${broadcasterId}${
+        queryParams ? '&' + querystring.stringify(queryParams) : ''
+      }`
+    )
+
+    return data
   }
 
   /**
