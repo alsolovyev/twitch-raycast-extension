@@ -26,7 +26,7 @@ export default ({ streams }: IOfflineStreams) => (
         actions={
           <ActionPanel>
             <Action.OpenInBrowser
-              icon={Icon.Livestream}
+              icon={{ source: Icon.Livestream, tintColor: Color.Purple }}
               title='Open Channel in Browser'
               url={`https://twitch.tv/${login}`}
             />

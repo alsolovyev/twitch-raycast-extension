@@ -32,13 +32,13 @@ export default ({ channels, subtitle, title }: ISearchedChannels): JSX.Element =
         actions={
           <ActionPanel>
             <Action.OpenInBrowser
-              icon={Icon.Livestream}
+              icon={{ source: Icon.Livestream, tintColor: Color.Purple }}
               title='Open Channel in Browser'
               url={`https://twitch.tv/${broadcaster_login}`}
             />
             {is_live && (
               <Action.OpenInBrowser
-                icon={Icon.SpeechBubble}
+                icon={{ source: Icon.SpeechBubble, tintColor: Color.Purple }}
                 title='Open Chat in Browser'
                 url={`https://twitch.tv/popout/${broadcaster_login}/chat?popout=`}
               />
