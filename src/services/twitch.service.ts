@@ -157,7 +157,7 @@ class TwitchService extends ApiService implements ITwitchService {
   }
 
   /**
-   * Gets information about line streams belonging to channels that the authenticated user follows.
+   * Gets information about live streams belonging to channels that the authenticated user follows.
    *
    * @remarks
    * Twitch API Reference Get Followed Streams - {@link https://dev.twitch.tv/docs/api/reference#get-followed-streams}
