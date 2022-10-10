@@ -128,7 +128,7 @@ export const enum TwitchResources {
   videos = '/helix/videos'
 }
 
-export interface ITwtichVideoQueryParams extends querystring.ParsedUrlQueryInput {
+export interface ITwtichGetUserVideosQueryParams extends querystring.ParsedUrlQueryInput {
   after?: string
   before?: string
   first?: string
@@ -278,7 +278,7 @@ class TwitchService extends ApiService implements ITwitchService {
    */
   public async getUserVideos(
     userId: string,
-    queryParams?: ITwtichVideoQueryParams
+    queryParams?: ITwtichGetUserVideosQueryParams
   ): Promise<Array<ITwitchVideo>> {
     if (!userId) return []
 
