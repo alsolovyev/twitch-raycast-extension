@@ -153,6 +153,11 @@ export enum TwitchVideoType {
   upload = 'upload'
 }
 
+export const enum TwitchMediaType {
+  clip = 'clip',
+  video = 'video'
+}
+
 /**
  * Service for working with Twitch.tv API
  *
