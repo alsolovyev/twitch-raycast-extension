@@ -1,7 +1,7 @@
 import { Action, ActionPanel, Color, Grid, Icon } from '@raycast/api'
 import { useState } from 'react'
 import useVideos from '../hooks/useVideos'
-import { TwitchVideoType } from '../services/twitch.service'
+import { ITwtichVideoQueryParams, TwitchVideoType } from '../services/twitch.service'
 import ErrorView from './Error'
 
 
@@ -15,7 +15,7 @@ export interface IVideoView {
 
 /** A view to display a grid of user videos */
 export default ({ user: { name, id } }: IVideoView) => {
-  const [type, setType] = useState<TwitchVideoType>(TwitchVideoType.archive)
+  const [type, setType] = useState<ITwtichVideoQueryParams>({ type: TwitchVideoType.archive })
   const [error, isLoading, videos] = useVideos(id, type)
 
   if (error) return <ErrorView error={error} />
@@ -29,7 +29,7 @@ export default ({ user: { name, id } }: IVideoView) => {
         <Grid.Dropdown
           tooltip='Select Video Type'
           storeValue={true}
-          onChange={type => setType(type as TwitchVideoType)}
+          onChange={type => setType({ type } as ITwtichVideoQueryParams)}
         >
           <Grid.Dropdown.Section title='Video Types'>
             {(Object.keys(TwitchVideoType) as Array<keyof typeof TwitchVideoType>).map((key, index) => (
