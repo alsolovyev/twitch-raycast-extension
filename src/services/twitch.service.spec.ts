@@ -135,7 +135,7 @@ describe('Twitch Service', () => {
   describe('getUserVideos', () => {
     it('should return a list of videos', async () => {
       nock(TwitchResources.host)
-        .get(`${TwitchResources.videos}?user_id=${fakeTwitchVideo.user_id}&type=${TwitchVideoType.all}`)
+        .get(`${TwitchResources.videos}?user_id=${fakeTwitchVideo.user_id}`)
         .reply(200, { data: [fakeTwitchVideo, fakeTwitchVideo] })
 
       await expect(twitchService.getUserVideos(fakeTwitchVideo.user_id)).resolves.toStrictEqual([fakeTwitchVideo, fakeTwitchVideo])
@@ -151,10 +151,24 @@ describe('Twitch Service', () => {
 
     it('should correctly throw an error', async () => {
       nock(TwitchResources.host)
-        .get(`${TwitchResources.videos}?user_id=${fakeTwitchVideo.user_id}&type=${TwitchVideoType.all}`)
+        .get(`${TwitchResources.videos}?user_id=${fakeTwitchVideo.user_id}`)
         .reply(401, fakeTwitchError)
 
       await expect(twitchService.getUserVideos(fakeTwitchVideo.user_id)).rejects.toStrictEqual(fakeTwitchError)
+    })
+
+    it('should currectlu parse qyery params', async () => {
+      const getSpy: jest.SpyInstance = jest.spyOn(twitchService, 'get')
+
+      nock(TwitchResources.host)
+        .get(`${TwitchResources.videos}?user_id=${fakeTwitchVideo.user_id}&type=${TwitchVideoType.all}`)
+        .reply(200, { data: [fakeTwitchVideo, fakeTwitchVideo] })
+
+      await twitchService.getUserVideos(fakeTwitchVideo.user_id, { type: TwitchVideoType.all })
+
+      expect(getSpy).toBeCalledWith(
+        `${TwitchResources.videos}?user_id=${fakeTwitchVideo.user_id}&type=${TwitchVideoType.all}`
+      )
     })
   })
 

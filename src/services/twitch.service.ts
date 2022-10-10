@@ -1,3 +1,4 @@
+import querystring from 'node:querystring'
 import ApiService from './api.service'
 import type { OutgoingHttpHeaders } from 'node:http'
 import { Singleton } from '../decorators/singleton.decorator'
@@ -106,6 +107,16 @@ export const enum TwitchResources {
   videos = '/helix/videos'
 }
 
+export interface ITwtichVideoQueryParams extends querystring.ParsedUrlQueryInput {
+  after?: string
+  before?: string
+  first?: string
+  language?: string
+  period?: string
+  sort?: 'time' | 'trending' | 'views'
+  type?: TwitchVideoType
+}
+
 export enum TwitchVideoType {
   all = 'all',
   archive = 'archive',
@@ -206,13 +217,19 @@ class TwitchService extends ApiService implements ITwitchService {
    * Twitch API Reference Get Videos - {@link https://dev.twitch.tv/docs/api/reference#get-videos}
    *
    * @param userId - The user ID.
+   * @param queryParams - Optional query params.
    * @returns a list of user videos.
    */
-  public async getUserVideos(userId: string, type: TwitchVideoType = TwitchVideoType.all): Promise<Array<ITwitchVideo>> {
+  public async getUserVideos(
+    userId: string,
+    queryParams?: ITwtichVideoQueryParams
+  ): Promise<Array<ITwitchVideo>> {
     if (!userId) return []
 
     const { data } = await this.get<ITwitchResponse<ITwitchVideo>>(
-      `${TwitchResources.videos}?user_id=${encodeURI(userId)}&type=${type}`
+      `${TwitchResources.videos}?user_id=${encodeURI(userId)}${
+        queryParams ? '&' + querystring.stringify(queryParams) : ''
+      }`
     )
 
     return data
