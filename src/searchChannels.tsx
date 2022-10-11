@@ -1,6 +1,7 @@
-import { Color, Icon, List, showToast, Toast } from '@raycast/api'
+import { Icon, List, showToast, Toast } from '@raycast/api'
 import { useEffect, useState } from 'react'
 import SearchedChannels from './components/SearchedChannels'
+import { accentColor } from './core/preferences'
 import useSearchChannels from './hooks/useSearchChannels'
 import ErrorView from './views/Error'
 
@@ -33,13 +34,13 @@ export default () => {
     >
       {query === undefined || (query === '' && liveChannels.length === 0 && offlineChannels.length === 0) ? (
         <List.EmptyView
-          icon={{ source: Icon.MagnifyingGlass, tintColor: Color.Purple }}
+          icon={{ source: Icon.MagnifyingGlass, tintColor: accentColor }}
           title='Search Twitch Channels'
           description='Enter a channel name or description'
         />
       ) : (
         <List.EmptyView
-          icon={{ source: Icon.HeartDisabled, tintColor: Color.Purple }}
+          icon={{ source: Icon.HeartDisabled, tintColor: accentColor }}
           title='No Matches Found'
           description='Please try another search'
         />

@@ -1,4 +1,5 @@
-import { Action, ActionPanel, Color, Icon, List } from '@raycast/api'
+import { Action, ActionPanel, Icon, List } from '@raycast/api'
+import { accentColor } from '../core/preferences'
 import { ITwitchUser } from '../services/twitch.service'
 import MediaView from '../views/Media'
 
@@ -27,12 +28,12 @@ export default ({ streams }: IOfflineStreams) => (
         actions={
           <ActionPanel>
             <Action.OpenInBrowser
-              icon={{ source: Icon.Livestream, tintColor: Color.Purple }}
+              icon={{ source: Icon.Livestream, tintColor: accentColor }}
               title='Open Channel in Browser'
               url={`https://twitch.tv/${login}`}
             />
             <Action.Push
-              icon={{ source: Icon.Video, tintColor: Color.Purple }}
+              icon={{ source: Icon.Video, tintColor: accentColor }}
               title='Open Channel Media'
               target={<MediaView user={{ id, name: display_name }} />}
             />

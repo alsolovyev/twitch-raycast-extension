@@ -1,4 +1,5 @@
 import { Action, ActionPanel, Color, Icon, List } from '@raycast/api'
+import { accentColor } from '../core/preferences'
 import { ITwitchLiveStream } from '../services/twitch.service'
 
 
@@ -30,12 +31,12 @@ export default ({ streams }: ILiveStreams) => (
         actions={
           <ActionPanel>
             <Action.OpenInBrowser
-              icon={Icon.Livestream}
+              icon={{ source: Icon.Livestream, tintColor: accentColor }}
               title='Open Channel in Browser'
               url={`https://twitch.tv/${user_login}`}
             />
             <Action.OpenInBrowser
-              icon={Icon.SpeechBubble}
+              icon={{ source: Icon.SpeechBubble, tintColor: accentColor }}
               title='Open Chat in Browser'
               url={`https://twitch.tv/popout/${user_login}/chat?popout=`}
             />

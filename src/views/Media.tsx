@@ -1,5 +1,6 @@
-import { Action, ActionPanel, Color, Grid, Icon } from '@raycast/api'
+import { Action, ActionPanel, Grid, Icon } from '@raycast/api'
 import { useState } from 'react'
+import { accentColor } from '../core/preferences'
 import useMedia from '../hooks/useMedia'
 import { ITwtichGetUserVideosQueryParams, TwitchMediaType, TwitchVideoType } from '../services/twitch.service'
 import ErrorView from './Error'
@@ -50,7 +51,7 @@ export default ({ user: { name, id } }: IMediaView) => {
       }
     >
       <Grid.EmptyView
-        icon={{ source: Icon.Video, tintColor: Color.Purple }}
+        icon={{ source: Icon.Video, tintColor: accentColor }}
         title={`No ${mediaType}s`}
         description={`${name} has no ${mediaType}s`}
       />
@@ -72,7 +73,7 @@ export default ({ user: { name, id } }: IMediaView) => {
           actions={
             <ActionPanel>
               <Action.OpenInBrowser
-                icon={{ source: Icon.Video, tintColor: Color.Purple }}
+                icon={{ source: Icon.Video, tintColor: accentColor }}
                 title={`Open ${mediaType} in Browser`}
                 url={url}
               />
