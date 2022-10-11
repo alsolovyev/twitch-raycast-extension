@@ -21,6 +21,7 @@
 - display followed channels
 - search channels
 - view channel videos
+- view channel clips
 
 <br />
 
