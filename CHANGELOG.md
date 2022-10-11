@@ -7,6 +7,7 @@
 - Replace useVideos with useMedia
 - Replace VideoView with MediaView
 - Minor changes
+- Add an accent color setting
 
 ## [New Channel Search Command] - 2022-10-08
 
