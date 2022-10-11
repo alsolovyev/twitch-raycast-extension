@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks'
 import { fakeTwitchClip, fakeTwitchError, fakeTwitchVideo } from '../constants/fake.constants'
-import twitchService, { ITwtichGetUserVideosQueryParams, TwitchMediaType, TwitchVideoType } from '../services/twitch.service'
+import twitchService, { ITwitchGetUserVideosQueryParams, TwitchMediaType, TwitchVideoType } from '../services/twitch.service'
 import useMedia from './useMedia'
 
 
@@ -48,7 +48,7 @@ describe('Hook: useMedia', () => {
   })
 
   it('should accept optional query parameters', async () => {
-    const queryParams: ITwtichGetUserVideosQueryParams = { type: TwitchVideoType.all }
+    const queryParams: ITwitchGetUserVideosQueryParams = { type: TwitchVideoType.all }
     const { waitForNextUpdate } = renderHook(() => useMedia(fakeTwitchVideo.user_id, TwitchMediaType.video, queryParams))
 
     await waitForNextUpdate()

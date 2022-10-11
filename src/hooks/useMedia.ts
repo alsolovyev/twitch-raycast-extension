@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { IApiServiceError } from '../services/api.service'
-import twitchService, { ITwitchClip, ITwitchError, ITwitchVideo, ITwtichGetUserVideosQueryParams, TwitchMediaType } from '../services/twitch.service'
+import twitchService, { ITwitchClip, ITwitchError, ITwitchVideo, ITwitchGetUserVideosQueryParams, TwitchMediaType } from '../services/twitch.service'
 
 
 /**
@@ -14,7 +14,7 @@ import twitchService, { ITwitchClip, ITwitchError, ITwitchVideo, ITwtichGetUserV
 export default (
   userId: string,
   mediaType: TwitchMediaType,
-  queryParams?: ITwtichGetUserVideosQueryParams
+  queryParams?: ITwitchGetUserVideosQueryParams
 ): [IApiServiceError | ITwitchError | undefined, boolean, Array<ITwitchClip> | Array<ITwitchVideo>] => {
   const [error, setError] = useState<IApiServiceError | ITwitchError>()
   const [isLoading, setIsLoading] = useState<boolean>(false)

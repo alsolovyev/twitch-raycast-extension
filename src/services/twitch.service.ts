@@ -128,7 +128,7 @@ export const enum TwitchResources {
   videos = '/helix/videos'
 }
 
-export interface ITwtichGetUserVideosQueryParams extends querystring.ParsedUrlQueryInput {
+export interface ITwitchGetUserVideosQueryParams extends querystring.ParsedUrlQueryInput {
   after?: string
   before?: string
   first?: string
@@ -138,7 +138,7 @@ export interface ITwtichGetUserVideosQueryParams extends querystring.ParsedUrlQu
   type?: TwitchVideoType
 }
 
-export interface ITwtichGetClipsQueryParams extends querystring.ParsedUrlQueryInput {
+export interface ITwitchGetClipsQueryParams extends querystring.ParsedUrlQueryInput {
   after?: string
   before?: string
   ended_at?: string
@@ -197,10 +197,10 @@ class TwitchService extends ApiService implements ITwitchService {
    * Twitch API Reference Get Clips - {@link https://dev.twitch.tv/docs/api/reference#get-clips}
    *
    * @param broadcasterId - The ID of a broadcaster whose clips are being requested.
-   * @param queryParams - Optional query params {@link ITwtichGetClipsQueryParams}.
+   * @param queryParams - Optional query params {@link ITwitchGetClipsQueryParams}.
    * @returns a list of clips.
    */
-  public async getClips(broadcasterId: string, queryParams?: ITwtichGetClipsQueryParams): Promise<Array<ITwitchClip>> {
+  public async getClips(broadcasterId: string, queryParams?: ITwitchGetClipsQueryParams): Promise<Array<ITwitchClip>> {
     if (!broadcasterId) return []
 
     const { data } = await this.get<ITwitchResponse<ITwitchClip>>(
@@ -278,7 +278,7 @@ class TwitchService extends ApiService implements ITwitchService {
    */
   public async getUserVideos(
     userId: string,
-    queryParams?: ITwtichGetUserVideosQueryParams
+    queryParams?: ITwitchGetUserVideosQueryParams
   ): Promise<Array<ITwitchVideo>> {
     if (!userId) return []
 

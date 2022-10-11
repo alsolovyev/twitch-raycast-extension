@@ -2,7 +2,7 @@ import { Action, ActionPanel, Grid, Icon } from '@raycast/api'
 import { useState } from 'react'
 import { accentColor } from '../core/preferences'
 import useMedia from '../hooks/useMedia'
-import { ITwtichGetUserVideosQueryParams, TwitchMediaType, TwitchVideoType } from '../services/twitch.service'
+import { ITwitchGetUserVideosQueryParams, TwitchMediaType, TwitchVideoType } from '../services/twitch.service'
 import ErrorView from './Error'
 
 export const enum ThumbnailSize {
@@ -16,7 +16,7 @@ export interface IMediaView {
 /** A view to display user media (videos, clips) */
 export default ({ user: { name, id } }: IMediaView) => {
   const [mediaType, setMediaType] = useState<TwitchMediaType>(TwitchMediaType.video)
-  const [queryParams, setQueryParams] = useState<ITwtichGetUserVideosQueryParams>({ type: TwitchVideoType.all })
+  const [queryParams, setQueryParams] = useState<ITwitchGetUserVideosQueryParams>({ type: TwitchVideoType.all })
   const [error, isLoading, videos] = useMedia(id, mediaType, queryParams)
 
   if (error) return <ErrorView error={error} />
