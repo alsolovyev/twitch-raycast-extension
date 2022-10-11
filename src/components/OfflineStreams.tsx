@@ -1,6 +1,6 @@
 import { Action, ActionPanel, Color, Icon, List } from '@raycast/api'
 import { ITwitchUser } from '../services/twitch.service'
-import Videos from '../views/Videos'
+import MediaView from '../views/Media'
 
 
 export interface IOfflineStreams {
@@ -33,8 +33,8 @@ export default ({ streams }: IOfflineStreams) => (
             />
             <Action.Push
               icon={{ source: Icon.Video, tintColor: Color.Purple }}
-              title='Open Channel Videos'
-              target={<Videos user={{ id, name: display_name }} />}
+              title='Open Channel Media'
+              target={<MediaView user={{ id, name: display_name }} />}
             />
           </ActionPanel>
         }

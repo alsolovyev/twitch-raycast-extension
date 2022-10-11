@@ -21,6 +21,7 @@
 - display followed channels
 - search channels
 - view channel videos
+- view channel clips
 
 <br />
 
@@ -41,6 +42,14 @@
   - After authorizing your application by clicking Authorize, the server sends the access token to your redirect URI in the fragment portion of the URI (see the access_token parameter).
 
 *or just use one of the web services - [twitchtokengenerator](https://twitchtokengenerator.com)*
+
+<br />
+
+
+### References
+
+- [Twitch Developer Documentation](https://dev.twitch.tv/docs/)
+- [Raycast Developer Documentation](https://developers.raycast.com)
 
 <br />
 

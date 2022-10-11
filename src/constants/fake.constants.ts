@@ -1,4 +1,5 @@
 import {
+  ITwitchClip,
   ITwitchError,
   ITwitchLiveStream,
   ITwitchSearchedChannel,
@@ -101,6 +102,25 @@ export const fakeTwitchVideo: ITwitchVideo = {
   user_name: 'TwitchDev',
   view_count: 1863062,
   viewable: 'public'
+}
+
+export const fakeTwitchClip: ITwitchClip = {
+  broadcaster_id: '67955580',
+  broadcaster_name: 'ChewieMelodies',
+  created_at: '2017-11-30T22:34:18Z',
+  creator_id: '53834192',
+  creator_name: 'BlackNova03',
+  duration: 60,
+  embed_url: 'https://clips.twitch.tv/embed?clip=AwkwardHelplessSalamanderSwiftRage',
+  game_id: '488191',
+  id: 'AwkwardHelplessSalamanderSwiftRage',
+  language: 'en',
+  thumbnail_url: 'https://clips-media-assets.twitch.tv/157589949-preview-480x272.jpg',
+  title: 'babymetal',
+  url: 'https://clips.twitch.tv/AwkwardHelplessSalamanderSwiftRage',
+  video_id: '205586603',
+  view_count: 10,
+  vod_offset: 480
 }
 
 export const fakeTwitchError: ITwitchError = {
