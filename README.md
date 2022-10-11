@@ -45,6 +45,14 @@
 <br />
 
 
+### References
+
+- [Twitch Developer Documentation](https://dev.twitch.tv/docs/)
+- [Raycast Developer Documentation](https://developers.raycast.com)
+
+<br />
+
+
 ### Authors
 * **[Aleksey Solovyev](https://github.com/alsolovyev)** - [solovyev.a@icloud.com](mailto:solovyev.a@icloud.com)
 
