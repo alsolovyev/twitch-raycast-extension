@@ -40,6 +40,24 @@
       "title": "Authorization Token",
       "required": true,
       "description": "Twitch Bearer token (must be matching with Client ID) - https://dev.twitch.tv/docs/api/get-started#get-an-oauth-token"
+    },
+    {
+      "name": "accentColor",
+      "type": "dropdown",
+      "data": [
+        { "title": "Blue", "value": "Blue" },
+        { "title": "Brown", "value": "Brown" },
+        { "title": "Green", "value": "Green" },
+        { "title": "Magenta", "value": "Magenta" },
+        { "title": "Orange", "value": "Orange" },
+        { "title": "Purple", "value": "Purple" },
+        { "title": "Red", "value": "Red" },
+        { "title": "Yellow", "value": "Yellow" }
+      ],
+      "default": "Purple",
+      "title": "Accent Color",
+      "required": false,
+      "description": "A color to be used for icons and some other UI elements."
     }
   ],
   "devDependencies": {

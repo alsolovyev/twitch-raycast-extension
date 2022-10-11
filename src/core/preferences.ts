@@ -1,11 +1,14 @@
-import { getPreferenceValues } from '@raycast/api'
+import { Color, getPreferenceValues } from '@raycast/api'
 
 
 interface RaycastPreferences {
+  accentColor: string
   authToken: string
   clientId: string
 }
 
-const { authToken, clientId } = getPreferenceValues<RaycastPreferences>()
+const { accentColor: color, authToken, clientId } = getPreferenceValues<RaycastPreferences>()
 
-export { authToken, clientId }
+const accentColor = Color[color as keyof typeof Color]
+
+export { accentColor, authToken, clientId }
