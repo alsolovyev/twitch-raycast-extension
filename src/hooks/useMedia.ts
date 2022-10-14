@@ -37,6 +37,7 @@ export default (
   const [media, setMedia] = useState<Array<ITwitchClip> | Array<ITwitchVideo>>([])
 
   useEffect(() => {
+    /* istanbul ignore next */
     isLoading || setIsLoading(true)
 
     const getMedia = async () => {
