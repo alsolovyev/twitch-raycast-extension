@@ -5,11 +5,12 @@ import ErrorView from './views/Error'
 import LiveStreams from './components/LiveStreams'
 import OfflineStreams from './components/OfflineStreams'
 import useFollowedStreams from './hooks/useFollowedStreams'
+import { areFollowedOfflineChannelsHidden } from './core/preferences'
 
 
 /** Displays information about followed channels */
 export default () => {
-  const [error, isLoading, liveStreams, offlineStreams] = useFollowedStreams()
+  const [error, isLoading, liveStreams, offlineStreams] = useFollowedStreams(areFollowedOfflineChannelsHidden)
 
   useEffect(() => {
     if (error) {
@@ -28,7 +29,7 @@ export default () => {
   return (
     <List navigationTitle='Followed Channels' isLoading={isLoading}>
       <LiveStreams streams={liveStreams} />
-      <OfflineStreams streams={offlineStreams} />
+      {!areFollowedOfflineChannelsHidden && <OfflineStreams streams={offlineStreams} /> }
     </List>
   )
 }

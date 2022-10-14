@@ -7,10 +7,12 @@ import type { ITwitchError, ITwitchLiveStream, ITwitchUser } from '../services/t
 /**
  * A React hook to get information about streams belonging to channels that the authenticated user follows.
  *
+ * @param isOfflineHidden - Specifies whether to show channels that are currently offline.
  * @param minViewCount - The minimum number of views to display a channel.
  * @returns an array of three elements: error, isLoading and an array of live stream.
  */
 export default (
+  isOfflineHidden: boolean = false,
   minViewCount: number = 1e4
 ): [ITwitchError | IApiServiceError | undefined, boolean, Array<ITwitchLiveStream>, Array<ITwitchUser>] => {
   const [error, setError] = useState<ITwitchError | IApiServiceError>()
@@ -26,6 +28,8 @@ export default (
       const liveStreams: Array<ITwitchLiveStream> = await twitchService.getLiveFollowedStreams(authUser.id)
 
       setLiveStreams(liveStreams)
+
+      if (isOfflineHidden) return
 
       const followedUsers: Array<ITwitchUserFollowsFromTo> = await twitchService.getUserFollows(authUser.id)
       const offlineFollowedUsers: Array<ITwitchUserFollowsFromTo> = followedUsers.filter(
