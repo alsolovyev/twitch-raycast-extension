@@ -42,7 +42,7 @@ export default (
     }
 
     getMedia().catch(setError).finally(() => setIsLoading(false))
-  }, [userId, mediaType, queryParams])
+  }, [mediaType, queryParams])
 
  return [error, isLoading, media]
 }
