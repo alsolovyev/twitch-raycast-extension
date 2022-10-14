@@ -17,7 +17,7 @@ export interface IMediaView {
 export default ({ user: { name, id } }: IMediaView) => {
   const [mediaType, setMediaType] = useState<TwitchMediaType>(TwitchMediaType.video)
   const [queryParams, setQueryParams] = useState<ITwitchGetUserVideosQueryParams>({ type: TwitchVideoType.all })
-  const [error, isLoading, videos] = useMedia(id, mediaType, queryParams)
+  const [error, isLoading, media] = useMedia(id, mediaType, queryParams)
 
   if (error) return <ErrorView error={error} />
 
@@ -56,7 +56,7 @@ export default ({ user: { name, id } }: IMediaView) => {
         description={`${name} has no ${mediaType}s`}
       />
 
-      {videos.map(({ id, thumbnail_url, title, url, created_at, view_count }) => (
+      {media.map(({ id, thumbnail_url, title, url, created_at, view_count }) => (
         <Grid.Item
           title={title}
           subtitle={
