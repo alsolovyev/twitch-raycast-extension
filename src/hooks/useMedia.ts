@@ -1,20 +1,36 @@
 import { useEffect, useState } from 'react'
 import { IApiServiceError } from '../services/api.service'
-import twitchService, { ITwitchClip, ITwitchError, ITwitchVideo, ITwitchGetUserVideosQueryParams, TwitchMediaType } from '../services/twitch.service'
+import twitchService, {
+  ITwitchClip,
+  ITwitchError,
+  ITwitchVideo,
+  ITwitchGetUserVideosQueryParams,
+  TwitchMediaType,
+  ITwitchGetClipsQueryParams
+} from '../services/twitch.service'
+
+export interface IUseMediaVideosParams {
+  mediaType: TwitchMediaType.video
+  queryParams?: ITwitchGetUserVideosQueryParams
+}
+
+export interface IUseMediaClipsParams {
+  mediaType: TwitchMediaType.clip
+  queryParams?: ITwitchGetClipsQueryParams
+}
 
 
 /**
  * A React hook for getting users media files (videos, clips)
  *
  * @param userId - The ID of the user whose video to get.
- * @param mediaType - The media type {@link TwitchMediaType} to be recieved.
- * @param queryParams - Optional query parameters.
+ * @param params.mediaType - The media type {@link TwitchMediaType} to be recieved.
+ * @param params.queryParams - Optional query parameters.
  * @returns an array of three elements: error, isLoading and media.
  */
 export default (
   userId: string,
-  mediaType: TwitchMediaType,
-  queryParams?: ITwitchGetUserVideosQueryParams
+  params: IUseMediaClipsParams | IUseMediaVideosParams
 ): [IApiServiceError | ITwitchError | undefined, boolean, Array<ITwitchClip> | Array<ITwitchVideo>] => {
   const [error, setError] = useState<IApiServiceError | ITwitchError>()
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -24,25 +40,25 @@ export default (
     isLoading || setIsLoading(true)
 
     const getMedia = async () => {
-      if (mediaType === TwitchMediaType.clip) {
-        const _media = await twitchService.getClips(userId)
+      if (params.mediaType === TwitchMediaType.clip) {
+        const _media = await twitchService.getClips(userId, params.queryParams)
         return setMedia(_media)
       }
 
-      if (mediaType === TwitchMediaType.video) {
-        const _media = await twitchService.getUserVideos(userId, queryParams)
+      if (params.mediaType === TwitchMediaType.video) {
+        const _media = await twitchService.getUserVideos(userId, params.queryParams)
         return setMedia(_media)
       }
 
       throw {
         status: 400,
         error: 'Unknown media type',
-        message: `${mediaType} media type is not yet supported`
+        message: `${params['mediaType']} media type is not yet supported`
       }
     }
 
     getMedia().catch(setError).finally(() => setIsLoading(false))
-  }, [mediaType, queryParams])
+  }, [params])
 
- return [error, isLoading, media]
+  return [error, isLoading, media]
 }

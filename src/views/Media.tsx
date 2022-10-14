@@ -1,8 +1,8 @@
 import { Action, ActionPanel, Grid, Icon } from '@raycast/api'
 import { useState } from 'react'
 import { accentColor } from '../core/preferences'
-import useMedia from '../hooks/useMedia'
-import { ITwitchGetUserVideosQueryParams, TwitchMediaType, TwitchVideoType } from '../services/twitch.service'
+import useMedia, { IUseMediaClipsParams, IUseMediaVideosParams } from '../hooks/useMedia'
+import { TwitchMediaType, TwitchVideoType } from '../services/twitch.service'
 import ErrorView from './Error'
 
 export const enum ThumbnailSize {
@@ -15,26 +15,26 @@ export interface IMediaView {
 
 /** A view to display user media (videos, clips) */
 export default ({ user: { name, id } }: IMediaView) => {
-  const [mediaType, setMediaType] = useState<TwitchMediaType>(TwitchMediaType.video)
-  const [queryParams, setQueryParams] = useState<ITwitchGetUserVideosQueryParams>({ type: TwitchVideoType.all })
-  const [error, isLoading, media] = useMedia(id, mediaType, queryParams)
+  const [params, setParams] = useState<IUseMediaClipsParams | IUseMediaVideosParams>({
+    mediaType: TwitchMediaType.video,
+    queryParams: { type: TwitchVideoType.all }
+  })
+  const [error, isLoading, media] = useMedia(id, params)
 
   if (error) return <ErrorView error={error} />
 
   return (
     <Grid
-      navigationTitle={`${name}'s ${mediaType}s`}
+      navigationTitle={`${name}'s ${params.mediaType}s`}
       itemSize={Grid.ItemSize.Medium}
       isLoading={isLoading}
       searchBarAccessory={
         <Grid.Dropdown
           tooltip='Select Video Type'
           onChange={value => {
-            if (value === JSON.stringify({ type: mediaType, queryParams })) return
+            if (value === JSON.stringify(params)) return
 
-            const payload = JSON.parse(value)
-            setMediaType(payload.type)
-            setQueryParams(payload.queryParams)
+            setParams(JSON.parse(value))
           }}
         >
           <Grid.Dropdown.Section title='Videos'>
@@ -42,27 +42,27 @@ export default ({ user: { name, id } }: IMediaView) => {
               <Grid.Dropdown.Item
                 key={index}
                 title={key}
-                value={JSON.stringify({ type: TwitchMediaType.video, queryParams: { type: key } })}
+                value={JSON.stringify({ mediaType: TwitchMediaType.video, queryParams: { type: key } })}
               />
             ))}
           </Grid.Dropdown.Section>
           <Grid.Dropdown.Section title='Clips'>
-            <Grid.Dropdown.Item key='-1' title='all' value={JSON.stringify({ type: TwitchMediaType.clip })} />
+            <Grid.Dropdown.Item key='-1' title='all' value={JSON.stringify({ mediaType: TwitchMediaType.clip })} />
           </Grid.Dropdown.Section>
         </Grid.Dropdown>
       }
     >
       <Grid.EmptyView
         icon={{ source: Icon.Video, tintColor: accentColor }}
-        title={`No ${mediaType}s`}
-        description={`${name} has no ${mediaType}s`}
+        title={`No ${params.mediaType}s`}
+        description={`${name} has no ${params.mediaType}s`}
       />
 
       {media.map(({ id, thumbnail_url, title, url, created_at, view_count }) => (
         <Grid.Item
           title={title}
           subtitle={
-            mediaType === TwitchMediaType.video
+            params.mediaType === TwitchMediaType.video
               ? new Date(created_at).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'long',
@@ -76,7 +76,7 @@ export default ({ user: { name, id } }: IMediaView) => {
             <ActionPanel>
               <Action.OpenInBrowser
                 icon={{ source: Icon.Video, tintColor: accentColor }}
-                title={`Open ${mediaType} in Browser`}
+                title={`Open ${params.mediaType} in Browser`}
                 url={url}
               />
             </ActionPanel>
