@@ -15,7 +15,16 @@
       "name": "followedChannels",
       "title": "Show Followed Channels",
       "description": "Shows information about followed channels",
-      "mode": "view"
+      "mode": "view",
+      "preferences": [
+        {
+          "name": "areFollowedOfflineChannelsHidden",
+          "type": "checkbox",
+          "default": false,
+          "title": "Hide Offline Channels",
+          "description": "This option hides the list of offline channels"
+        }
+      ]
     },
     {
       "name": "searchChannels",

@@ -19,6 +19,24 @@ describe('Hook: useLiveFollowedStreams', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
+  it('should return a list of live streams', async () => {
+    const getAuthUser = jest.spyOn(twitchService, 'getAuthUser')
+    const getLiveFollowedStreamsSpy = jest.spyOn(twitchService, 'getLiveFollowedStreams')
+    const getUserFollowsSpy = jest.spyOn(twitchService, 'getUserFollows')
+    const getUsersSpy = jest.spyOn(twitchService, 'getUsers')
+    const { result, waitForNextUpdate } = renderHook(() => useLiveFollowedStreams(true))
+
+    expect(result.current).toStrictEqual([undefined, true, [], []])
+
+    await waitForNextUpdate()
+
+    expect(result.current).toStrictEqual([undefined, false, [fakeTwitchLiveStream], []])
+    expect(getAuthUser).toBeCalledTimes(1)
+    expect(getLiveFollowedStreamsSpy).toBeCalledTimes(1)
+    expect(getLiveFollowedStreamsSpy).toBeCalledWith(fakeTwitchUser.id)
+    expect(getUserFollowsSpy).not.toBeCalled()
+    expect(getUsersSpy).not.toBeCalled()
+  })
 
   it('should return a list of live and offline streams', async () => {
     const getAuthUser = jest.spyOn(twitchService, 'getAuthUser')
