@@ -30,9 +30,11 @@ export default ({ user: { name, id } }: IMediaView) => {
         <Grid.Dropdown
           tooltip='Select Video Type'
           onChange={value => {
-            const { type, queryParams } = JSON.parse(value)
-            setMediaType(type)
-            setQueryParams(queryParams)
+            if (value === JSON.stringify({ type: mediaType, queryParams })) return
+
+            const payload = JSON.parse(value)
+            setMediaType(payload.type)
+            setQueryParams(payload.queryParams)
           }}
         >
           <Grid.Dropdown.Section title='Videos'>
