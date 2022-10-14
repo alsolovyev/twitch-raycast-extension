@@ -17,11 +17,11 @@ export default (
   queryParams?: ITwitchGetUserVideosQueryParams
 ): [IApiServiceError | ITwitchError | undefined, boolean, Array<ITwitchClip> | Array<ITwitchVideo>] => {
   const [error, setError] = useState<IApiServiceError | ITwitchError>()
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
   const [media, setMedia] = useState<Array<ITwitchClip> | Array<ITwitchVideo>>([])
 
   useEffect(() => {
-    setIsLoading(true)
+    isLoading || setIsLoading(true)
 
     const getMedia = async () => {
       if (mediaType === TwitchMediaType.clip) {
