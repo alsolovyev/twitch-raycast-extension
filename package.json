@@ -87,7 +87,7 @@
     "fix-lint": "ray lint --fix",
     "lint": "ray lint",
     "publish": "ray publish",
-    "init:hooks": "git config core.hooksPath .githooks",
+    "init:hooks": "git config core.hooksPath .github/hooks",
     "test": "jest --collect-coverage"
   }
 }
