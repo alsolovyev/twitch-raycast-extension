@@ -16,13 +16,11 @@ export default (
   minViewCount: number = 1e4
 ): [ITwitchError | IApiServiceError | undefined, boolean, Array<ITwitchLiveStream>, Array<ITwitchUser>] => {
   const [error, setError] = useState<ITwitchError | IApiServiceError>()
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
   const [liveStreams, setLiveStreams] = useState<Array<ITwitchLiveStream>>([])
   const [offlineStreams, setOfflineStreams] = useState<Array<ITwitchUser>>([])
 
   useEffect(() => {
-    setIsLoading(true)
-
     const getStreams = async () => {
       const authUser: ITwitchUser = await twitchService.getAuthUser()
       const liveStreams: Array<ITwitchLiveStream> = await twitchService.getLiveFollowedStreams(authUser.id)
