@@ -22,6 +22,8 @@
           "type": "checkbox",
           "default": false,
           "title": "Hide Offline Channels",
+          "required": false,
+          "label": "Whether to show channels that are offline",
           "description": "This option hides the list of offline channels"
         }
       ]
