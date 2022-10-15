@@ -4,7 +4,7 @@
   "title": "Twitch",
   "description": "Raycast extension to search and view information about Twitch users.",
   "icon": "extension-icon.png",
-  "author": "Aleksey Solovyev",
+  "author": "Aleksey Solovyev <solovyev.a@icloud.com>",
   "categories": [
     "Fun",
     "Media"
@@ -18,11 +18,13 @@
       "mode": "view",
       "preferences": [
         {
+          "title": "Hide Offline Channels",
+          "description": "This option hides the list of offline channels",
+          "required": false,
           "name": "areFollowedOfflineChannelsHidden",
           "type": "checkbox",
-          "default": false,
-          "title": "Hide Offline Channels",
-          "description": "This option hides the list of offline channels"
+          "label": "Whether to show channels that are offline or not",
+          "default": false
         }
       ]
     },
@@ -35,22 +37,25 @@
   ],
   "preferences": [
     {
+      "title": "Client ID",
+      "description": "Twitch Client ID - https://dev.twitch.tv/docs/api/get-started#register-an-application",
+      "required": true,
       "name": "clientId",
       "type": "password",
-      "default": "",
-      "title": "Client ID",
-      "required": true,
-      "description": "Twitch Client ID - https://dev.twitch.tv/docs/api/get-started#register-an-application"
+      "default": ""
     },
     {
+      "title": "Authorization Token",
+      "description": "Twitch Bearer token (must be matching with Client ID) - https://dev.twitch.tv/docs/api/get-started#get-an-oauth-token",
+      "required": true,
       "name": "authToken",
       "type": "password",
-      "default": "",
-      "title": "Authorization Token",
-      "required": true,
-      "description": "Twitch Bearer token (must be matching with Client ID) - https://dev.twitch.tv/docs/api/get-started#get-an-oauth-token"
+      "default": ""
     },
     {
+      "title": "Accent Color",
+      "description": "A color to be used for icons and some other UI elements.",
+      "required": false,
       "name": "accentColor",
       "type": "dropdown",
       "data": [
@@ -63,10 +68,7 @@
         { "title": "Red", "value": "Red" },
         { "title": "Yellow", "value": "Yellow" }
       ],
-      "default": "Purple",
-      "title": "Accent Color",
-      "required": false,
-      "description": "A color to be used for icons and some other UI elements."
+      "default": "Purple"
     }
   ],
   "devDependencies": {
