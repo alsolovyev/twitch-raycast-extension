@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks'
 import { fakeTwitchClip, fakeTwitchError, fakeTwitchVideo } from '../constants/fake.constants'
-import twitchService, { ITwitchGetUserVideosQueryParams, TwitchMediaType, TwitchVideoType } from '../services/twitch.service'
+import twitchService, { TwitchMediaType, TwitchVideoType } from '../services/twitch.service'
 import useMedia from './useMedia'
 
 
@@ -18,7 +18,7 @@ jest.mock('../services/twitch.service', () => ({
 }))
 
 describe('Hook: useMedia', () => {
-   beforeEach(() => {
+  beforeEach(() => {
     jest.clearAllMocks()
   })
 
@@ -26,7 +26,8 @@ describe('Hook: useMedia', () => {
   const getClipsSpy: jest.SpyInstance = jest.spyOn(twitchService, 'getClips')
 
   it('should return a list of videos', async () => {
-    const { result, waitForNextUpdate } = renderHook(() => useMedia(fakeTwitchVideo.user_id, TwitchMediaType.video))
+    const hookOptions = { mediaType: TwitchMediaType.video }
+    const { result, waitForNextUpdate } = renderHook(() => useMedia(fakeTwitchVideo.user_id, hookOptions))
 
     expect(result.current).toStrictEqual([undefined, true, []])
 
@@ -37,7 +38,8 @@ describe('Hook: useMedia', () => {
   })
 
   it('should return a list of clips', async () => {
-    const { result, waitForNextUpdate } = renderHook(() => useMedia(fakeTwitchClip.broadcaster_id, TwitchMediaType.clip))
+    const hookOptions = { mediaType: TwitchMediaType.clip }
+    const { result, waitForNextUpdate } = renderHook(() => useMedia(fakeTwitchClip.broadcaster_id, hookOptions))
 
     expect(result.current).toStrictEqual([undefined, true, []])
 
@@ -48,18 +50,19 @@ describe('Hook: useMedia', () => {
   })
 
   it('should accept optional query parameters', async () => {
-    const queryParams: ITwitchGetUserVideosQueryParams = { type: TwitchVideoType.all }
-    const { waitForNextUpdate } = renderHook(() => useMedia(fakeTwitchVideo.user_id, TwitchMediaType.video, queryParams))
+    const hookOptions = { mediaType: TwitchMediaType.video, queryParams: { type: TwitchVideoType.all } }
+    const { waitForNextUpdate } = renderHook(() => useMedia(fakeTwitchVideo.user_id, hookOptions))
 
     await waitForNextUpdate()
 
-    expect(getUserVideosSpy).toBeCalledWith(fakeTwitchVideo.user_id, queryParams)
+    expect(getUserVideosSpy).toBeCalledWith(fakeTwitchVideo.user_id, hookOptions.queryParams)
   })
 
   it('should return an error', async () => {
     getUserVideosSpy.mockRejectedValue(fakeTwitchError)
 
-    const { result, waitForNextUpdate } = renderHook(() => useMedia(fakeTwitchVideo.user_id, TwitchMediaType.video))
+    const hookOptions = { mediaType: TwitchMediaType.video }
+    const { result, waitForNextUpdate } = renderHook(() => useMedia(fakeTwitchVideo.user_id, hookOptions))
 
     expect(result.current).toStrictEqual([undefined, true, []])
 
@@ -75,7 +78,8 @@ describe('Hook: useMedia', () => {
       error: 'Unknown media type',
       message: 'photo media type is not yet supported'
     }
-    const { result, waitForNextUpdate } = renderHook(() => useMedia(fakeTwitchVideo.user_id, 'photo' as TwitchMediaType))
+    const hookOptions = { mediaType: 'photo' as TwitchMediaType }
+    const { result, waitForNextUpdate } = renderHook(() => useMedia(fakeTwitchVideo.user_id, hookOptions))
 
     expect(result.current).toStrictEqual([undefined, true, []])
 
