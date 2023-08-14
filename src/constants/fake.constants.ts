@@ -56,7 +56,7 @@ export const fakeTwitchUserFollowsFromTo: ITwitchUserFollowsFromTo = {
 export const fakeTwitchLiveSearchedChannel: ITwitchSearchedChannel = {
   broadcaster_language: 'en',
   broadcaster_login: 'loserfruit',
-  display_name: 'Loserfruit',
+  display_name: 'ryan dunn',
   game_id: '498000',
   game_name: 'House Flipper',
   id: '41245072',

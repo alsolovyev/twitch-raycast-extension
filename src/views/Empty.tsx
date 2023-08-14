@@ -8,7 +8,7 @@ export interface IEmptyView {
 
 const EmptyIcon: Image.ImageLike = {
   source: Icon.HeartDisabled,
-  tintColor: Color.Red
+  tintColor: Color.green
 }
 
 /** A view to display when there aren't any items available */
